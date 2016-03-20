@@ -12,14 +12,27 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
-
+    var persistenceStack: PersistenceStack!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        persistenceStack = PersistenceStack.sharedStack()
+        
         let splitViewController = self.window!.rootViewController as! UISplitViewController
-        let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
+        let navigationController = splitViewController.viewControllers.last as! UINavigationController
         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
         splitViewController.delegate = self
+        
+        let nav = splitViewController.viewControllers.first as! UINavigationController
+        let notesVC = nav.topViewController as! NotesViewController
+        notesVC.managedObjectContext = persistenceStack.managedObjectContext
+        
+        UINavigationBar.appearance().barStyle = UIBarStyle.Black
+        UINavigationBar.appearance().translucent = false
+        UINavigationBar.appearance().barTintColor = UIColor(red:0.00, green:0.52, blue:1.00, alpha:1.00)
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        window?.tintColor = UIColor(red:0.00, green:0.52, blue:1.00, alpha:1.00)
+        
         return true
     }
 
@@ -49,8 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
         guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
-        guard let topAsDetailController = secondaryAsNavController.topViewController as? DetailViewController else { return false }
-        if topAsDetailController.detailItem == nil {
+        guard let topAsDetailController = secondaryAsNavController.topViewController as? NoteDetailViewController else { return false }
+        if topAsDetailController.note == nil {
             // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
             return true
         }
