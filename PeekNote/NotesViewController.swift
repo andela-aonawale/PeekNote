@@ -29,7 +29,6 @@ class NotesViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
-        self.navigationItem.rightBarButtonItem = editButtonItem()
         fetchedResultsControllerDataSource = FetchedResultsControllerDataSource(tableView: tableView, reuseIdentifier: "Note Cell", fetchedResultsController: fetchedResultsController)
         fetchedResultsControllerDataSource.delegate = self
     }
@@ -73,12 +72,7 @@ extension NotesViewController: NoteDetailViewControllerDelegate {
     }
 }
 
-extension NotesViewController: FetchedResultsControllerDataSourceDelegate {
-    func configureCell(cell: UITableViewCell, withNote note: Note) {
-        cell.textLabel?.text = note.title
-        cell.detailTextLabel?.text = note.body
-    }
-    
+extension NotesViewController: FetchedResultsControllerDataSourceDelegate {    
     func deleteNote(note: Note) {
         managedObjectContext.deleteObject(note)
         managedObjectContext.saveContext()

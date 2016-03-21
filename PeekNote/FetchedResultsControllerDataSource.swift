@@ -12,7 +12,6 @@ import CoreData
 
 protocol FetchedResultsControllerDataSourceDelegate {
     func deleteNote(note: Note)
-    func configureCell(cell: UITableViewCell, withNote note: Note)
 }
 
 class FetchedResultsControllerDataSource: NSObject {
@@ -47,6 +46,10 @@ extension FetchedResultsControllerDataSource: UITableViewDataSource {
         return true
     }
     
+    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section]
         return sectionInfo.numberOfObjects
@@ -57,9 +60,8 @@ extension FetchedResultsControllerDataSource: UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let note = fetchedResultsController.objectAtIndexPath(indexPath) as! Note
-        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath)
-        delegate.configureCell(cell, withNote: note)
+        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! NoteTableViewCell
+        cell.note = fetchedResultsController.objectAtIndexPath(indexPath) as! Note
         return cell
     }
     
