@@ -6,21 +6,24 @@
 //  Copyright © 2016 Ahmed Onawale. All rights reserved.
 //
 
-import UIKit
 import Foundation
 import CoreData
+import UIKit
 
-protocol FetchedResultsControllerDataSourceDelegate {
-    func deleteNote(note: Note)
+@objc protocol UITableViewFRCDataSourceDelegate: class {
+    optional func  tableViewFRCDataSource(dataSource: UITableViewFRCDataSource, deleteObject object: NSManagedObject)
+    func tableViewFRCDataSource(dataSource: UITableViewFRCDataSource, configureCell cell: UITableViewCell, withObject object: NSManagedObject)
 }
 
-class FetchedResultsControllerDataSource: NSObject {
+class UITableViewFRCDataSource: NSObject {
     
-    var reuseIdentifier: String
-    var tableView: UITableView
-    var fetchedResultsController: NSFetchedResultsController!
-    var delegate: FetchedResultsControllerDataSourceDelegate!
+    // MARK: - Properties
+    private var reuseIdentifier: String
+    private var tableView: UITableView
+    private var fetchedResultsController: NSFetchedResultsController!
+    weak var delegate: UITableViewFRCDataSourceDelegate?
     
+    // MARK: - Initialization
     init(tableView: UITableView, reuseIdentifier: String, fetchedResultsController: NSFetchedResultsController) {
         self.tableView = tableView
         self.reuseIdentifier = reuseIdentifier
@@ -28,7 +31,10 @@ class FetchedResultsControllerDataSource: NSObject {
         super.init()
         self.tableView.dataSource = self
         fetchedResultsController.delegate = self
-        
+        performFetch()
+    }
+    
+    private func performFetch() {
         do {
             try fetchedResultsController.performFetch()
         } catch {
@@ -38,17 +44,9 @@ class FetchedResultsControllerDataSource: NSObject {
     
 }
 
-extension FetchedResultsControllerDataSource: UITableViewDataSource {
+extension UITableViewFRCDataSource: UITableViewDataSource {
     
-    // MARK: - Table View
-    
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
+    // MARK: - Table View data source
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section]
@@ -60,20 +58,32 @@ extension FetchedResultsControllerDataSource: UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! NoteTableViewCell
-        cell.note = fetchedResultsController.objectAtIndexPath(indexPath) as! Note
+        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath)
+        let object = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+        delegate?.tableViewFRCDataSource(self, configureCell: cell, withObject: object)
         return cell
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            delegate.deleteNote(fetchedResultsController.objectAtIndexPath(indexPath) as! Note)
+            let object = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+            delegate?.tableViewFRCDataSource?(self, deleteObject: object)
         }
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
     }
     
 }
 
-extension FetchedResultsControllerDataSource: NSFetchedResultsControllerDelegate {
+extension UITableViewFRCDataSource: NSFetchedResultsControllerDelegate {
+    
+    // MARK: - NSFetchedResultsControllerDelegate
     
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         tableView.beginUpdates()

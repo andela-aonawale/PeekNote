@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 extension UIViewController {
     var contentViewController: UIViewController {
@@ -15,5 +16,11 @@ extension UIViewController {
             return navcon.topViewController ?? self
         }
         return self
+    }
+}
+
+extension NSString {
+    var isEmpty: Bool {
+        return self.length == 0
     }
 }

@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		855E40C31CA354A20029F5E9 /* RelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855E40C21CA354A20029F5E9 /* RelativeDateFormatter.swift */; };
+		855E40C51CA354C60029F5E9 /* PersistenceStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855E40C41CA354C60029F5E9 /* PersistenceStack.swift */; };
+		8573383A1CA4AFF6007738E6 /* TagListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857338391CA4AFF6007738E6 /* TagListViewController.swift */; };
+		857338441CA4CFBF007738E6 /* TagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857338421CA4CFBF007738E6 /* TagCell.swift */; };
+		857338451CA4CFBF007738E6 /* TagCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 857338431CA4CFBF007738E6 /* TagCell.xib */; };
+		857338471CA4E1CA007738E6 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857338461CA4E1CA007738E6 /* Tag.swift */; };
+		8573384D1CA4EA6A007738E6 /* TagsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8573384C1CA4EA6A007738E6 /* TagsCollectionViewController.swift */; };
+		8573384F1CA4EBD7007738E6 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8573384E1CA4EBD7007738E6 /* FlowLayout.swift */; };
+		85B2BDF31CA3D6560024814D /* NoteCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B2BDF21CA3D6560024814D /* NoteCollectionViewCell.swift */; };
+		85B2BDF51CA3D8990024814D /* UICollectionViewFRCDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B2BDF41CA3D8990024814D /* UICollectionViewFRCDataSource.swift */; };
 		85F083B51C9EF78E004CE692 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083B41C9EF78E004CE692 /* AppDelegate.swift */; };
 		85F083B71C9EF78E004CE692 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083B61C9EF78E004CE692 /* NotesViewController.swift */; };
 		85F083B91C9EF78E004CE692 /* NoteDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083B81C9EF78E004CE692 /* NoteDetailViewController.swift */; };
@@ -15,11 +25,10 @@
 		85F083C11C9EF78E004CE692 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85F083BF1C9EF78E004CE692 /* LaunchScreen.storyboard */; };
 		85F083CC1C9EF78F004CE692 /* PeekNoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083CB1C9EF78F004CE692 /* PeekNoteTests.swift */; };
 		85F083D71C9EF78F004CE692 /* PeekNoteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083D61C9EF78F004CE692 /* PeekNoteUITests.swift */; };
-		85F083E51C9EF806004CE692 /* PersistenceStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083E41C9EF806004CE692 /* PersistenceStack.swift */; };
 		85F084271C9F0091004CE692 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F084261C9F0091004CE692 /* Note.swift */; };
 		85F0842A1C9F00F4004CE692 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 85F084281C9F00F4004CE692 /* Model.xcdatamodeld */; };
 		85F0842C1C9F03FB004CE692 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F0842B1C9F03FB004CE692 /* Reminder.swift */; };
-		85F084301C9F1599004CE692 /* FetchedResultsControllerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F0842F1C9F1599004CE692 /* FetchedResultsControllerDataSource.swift */; };
+		85F084301C9F1599004CE692 /* UITableViewFRCDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F0842F1C9F1599004CE692 /* UITableViewFRCDataSource.swift */; };
 		85F084321C9F1B48004CE692 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F084311C9F1B48004CE692 /* Extension.swift */; };
 		85F084351C9F5D54004CE692 /* NoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F084341C9F5D54004CE692 /* NoteTableViewCell.swift */; };
 /* End PBXBuildFile section */
@@ -42,6 +51,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		855E40C21CA354A20029F5E9 /* RelativeDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelativeDateFormatter.swift; sourceTree = "<group>"; };
+		855E40C41CA354C60029F5E9 /* PersistenceStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceStack.swift; sourceTree = "<group>"; };
+		857338391CA4AFF6007738E6 /* TagListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListViewController.swift; sourceTree = "<group>"; };
+		857338421CA4CFBF007738E6 /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
+		857338431CA4CFBF007738E6 /* TagCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagCell.xib; sourceTree = "<group>"; };
+		857338461CA4E1CA007738E6 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		8573384C1CA4EA6A007738E6 /* TagsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsCollectionViewController.swift; sourceTree = "<group>"; };
+		8573384E1CA4EBD7007738E6 /* FlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		85B2BDF21CA3D6560024814D /* NoteCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteCollectionViewCell.swift; sourceTree = "<group>"; };
+		85B2BDF41CA3D8990024814D /* UICollectionViewFRCDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewFRCDataSource.swift; sourceTree = "<group>"; };
 		85F083B11C9EF78E004CE692 /* PeekNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PeekNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85F083B41C9EF78E004CE692 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		85F083B61C9EF78E004CE692 /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
@@ -56,11 +75,10 @@
 		85F083D21C9EF78F004CE692 /* PeekNoteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PeekNoteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		85F083D61C9EF78F004CE692 /* PeekNoteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeekNoteUITests.swift; sourceTree = "<group>"; };
 		85F083D81C9EF78F004CE692 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		85F083E41C9EF806004CE692 /* PersistenceStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceStack.swift; sourceTree = "<group>"; };
 		85F084261C9F0091004CE692 /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		85F084291C9F00F4004CE692 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		85F0842B1C9F03FB004CE692 /* Reminder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
-		85F0842F1C9F1599004CE692 /* FetchedResultsControllerDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsControllerDataSource.swift; sourceTree = "<group>"; };
+		85F0842F1C9F1599004CE692 /* UITableViewFRCDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewFRCDataSource.swift; sourceTree = "<group>"; };
 		85F084311C9F1B48004CE692 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		85F084341C9F5D54004CE692 /* NoteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,6 +108,50 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8573383B1CA4CDB6007738E6 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				85F083BA1C9EF78E004CE692 /* Main.storyboard */,
+				85F083BF1C9EF78E004CE692 /* LaunchScreen.storyboard */,
+			);
+			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		857338481CA4E3BF007738E6 /* Nibs */ = {
+			isa = PBXGroup;
+			children = (
+				857338431CA4CFBF007738E6 /* TagCell.xib */,
+			);
+			name = Nibs;
+			sourceTree = "<group>";
+		};
+		857338491CA4E3C7007738E6 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				85F084341C9F5D54004CE692 /* NoteTableViewCell.swift */,
+				85B2BDF21CA3D6560024814D /* NoteCollectionViewCell.swift */,
+				857338421CA4CFBF007738E6 /* TagCell.swift */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		8573384A1CA4E3DF007738E6 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				8573384B1CA4E477007738E6 /* Extensions */,
+				85F0842E1C9F1556004CE692 /* Helpers */,
+			);
+			name = Library;
+			sourceTree = "<group>";
+		};
+		8573384B1CA4E477007738E6 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				85F084311C9F1B48004CE692 /* Extension.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 		85F083A81C9EF78E004CE692 = {
 			isa = PBXGroup;
 			children = (
@@ -113,14 +175,13 @@
 		85F083B31C9EF78E004CE692 /* PeekNote */ = {
 			isa = PBXGroup;
 			children = (
+				8573384A1CA4E3DF007738E6 /* Library */,
+				8573383B1CA4CDB6007738E6 /* Storyboards */,
 				85F084331C9F5CF7004CE692 /* Views */,
-				85F0842E1C9F1556004CE692 /* Helpers */,
 				85F0842D1C9F1547004CE692 /* Controllers */,
 				85F084251C9F002F004CE692 /* Models */,
 				85F083B41C9EF78E004CE692 /* AppDelegate.swift */,
-				85F083BA1C9EF78E004CE692 /* Main.storyboard */,
 				85F083BD1C9EF78E004CE692 /* Assets.xcassets */,
-				85F083BF1C9EF78E004CE692 /* LaunchScreen.storyboard */,
 				85F083C21C9EF78E004CE692 /* Info.plist */,
 			);
 			path = PeekNote;
@@ -148,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				85F084261C9F0091004CE692 /* Note.swift */,
+				857338461CA4E1CA007738E6 /* Tag.swift */,
 				85F0842B1C9F03FB004CE692 /* Reminder.swift */,
 				85F084281C9F00F4004CE692 /* Model.xcdatamodeld */,
 			);
@@ -159,6 +221,8 @@
 			children = (
 				85F083B61C9EF78E004CE692 /* NotesViewController.swift */,
 				85F083B81C9EF78E004CE692 /* NoteDetailViewController.swift */,
+				857338391CA4AFF6007738E6 /* TagListViewController.swift */,
+				8573384C1CA4EA6A007738E6 /* TagsCollectionViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -166,9 +230,11 @@
 		85F0842E1C9F1556004CE692 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				85F083E41C9EF806004CE692 /* PersistenceStack.swift */,
-				85F0842F1C9F1599004CE692 /* FetchedResultsControllerDataSource.swift */,
-				85F084311C9F1B48004CE692 /* Extension.swift */,
+				855E40C41CA354C60029F5E9 /* PersistenceStack.swift */,
+				855E40C21CA354A20029F5E9 /* RelativeDateFormatter.swift */,
+				85F0842F1C9F1599004CE692 /* UITableViewFRCDataSource.swift */,
+				85B2BDF41CA3D8990024814D /* UICollectionViewFRCDataSource.swift */,
+				8573384E1CA4EBD7007738E6 /* FlowLayout.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -176,7 +242,8 @@
 		85F084331C9F5CF7004CE692 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				85F084341C9F5D54004CE692 /* NoteTableViewCell.swift */,
+				857338491CA4E3C7007738E6 /* Classes */,
+				857338481CA4E3BF007738E6 /* Nibs */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -285,6 +352,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				857338451CA4CFBF007738E6 /* TagCell.xib in Resources */,
 				85F083C11C9EF78E004CE692 /* LaunchScreen.storyboard in Resources */,
 				85F083BE1C9EF78E004CE692 /* Assets.xcassets in Resources */,
 				85F083BC1C9EF78E004CE692 /* Main.storyboard in Resources */,
@@ -312,15 +380,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				857338471CA4E1CA007738E6 /* Tag.swift in Sources */,
 				85F084321C9F1B48004CE692 /* Extension.swift in Sources */,
 				85F084271C9F0091004CE692 /* Note.swift in Sources */,
+				855E40C31CA354A20029F5E9 /* RelativeDateFormatter.swift in Sources */,
+				857338441CA4CFBF007738E6 /* TagCell.swift in Sources */,
 				85F0842C1C9F03FB004CE692 /* Reminder.swift in Sources */,
 				85F084351C9F5D54004CE692 /* NoteTableViewCell.swift in Sources */,
-				85F084301C9F1599004CE692 /* FetchedResultsControllerDataSource.swift in Sources */,
-				85F083E51C9EF806004CE692 /* PersistenceStack.swift in Sources */,
+				8573384F1CA4EBD7007738E6 /* FlowLayout.swift in Sources */,
+				85F084301C9F1599004CE692 /* UITableViewFRCDataSource.swift in Sources */,
+				85B2BDF51CA3D8990024814D /* UICollectionViewFRCDataSource.swift in Sources */,
+				855E40C51CA354C60029F5E9 /* PersistenceStack.swift in Sources */,
+				8573384D1CA4EA6A007738E6 /* TagsCollectionViewController.swift in Sources */,
 				85F083B91C9EF78E004CE692 /* NoteDetailViewController.swift in Sources */,
 				85F083B71C9EF78E004CE692 /* NotesViewController.swift in Sources */,
 				85F083B51C9EF78E004CE692 /* AppDelegate.swift in Sources */,
+				8573383A1CA4AFF6007738E6 /* TagListViewController.swift in Sources */,
+				85B2BDF31CA3D6560024814D /* NoteCollectionViewCell.swift in Sources */,
 				85F0842A1C9F00F4004CE692 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -550,6 +626,7 @@
 				85F083DD1C9EF78F004CE692 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		85F083DE1C9EF78F004CE692 /* Build configuration list for PBXNativeTarget "PeekNoteTests" */ = {
 			isa = XCConfigurationList;
@@ -558,6 +635,7 @@
 				85F083E01C9EF78F004CE692 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		85F083E11C9EF78F004CE692 /* Build configuration list for PBXNativeTarget "PeekNoteUITests" */ = {
 			isa = XCConfigurationList;
@@ -566,6 +644,7 @@
 				85F083E31C9EF78F004CE692 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

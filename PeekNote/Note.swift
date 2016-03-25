@@ -9,15 +9,33 @@
 import Foundation
 import CoreData
 
-protocol EntityName {
-    static var entityName: String { get }
+@objc enum State: Int32 {
+    case Normal
+    case Archived
+    case Trashed
 }
 
 class Note: NSManagedObject {
-    @NSManaged var title: String
+    
+    @NSManaged var tag: Tag?
+    @NSManaged var state: State
     @NSManaged var body: String
-    @NSManaged var createdAt: NSDate
-    @NSManaged var updatedAt: NSDate
+    @NSManaged var title: String
+    @NSManaged var reminder: Reminder?
+    @NSManaged var updatedDate: NSDate
+    @NSManaged var creationDate: NSDate
+    
+    static let dateFormatter: RelativeDateFormatter = {
+        return RelativeDateFormatter()
+    }()
+    
+    // transient properties
+    var createdDateString: String {
+        return Note.dateFormatter.stringForDate(creationDate)
+    }
+    var updatedDateString: String {
+        return Note.dateFormatter.stringForDate(updatedDate)
+    }
     
     convenience init(title: String, body: String, insertIntoManagedObjectContext context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName("Note", inManagedObjectContext: context)!
@@ -28,13 +46,8 @@ class Note: NSManagedObject {
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
-        setPrimitiveValue(NSDate(), forKey: "createdAt")
-        setPrimitiveValue(NSDate(), forKey: "updatedAt")
+        setPrimitiveValue(NSDate(), forKey: "creationDate")
+        setPrimitiveValue(NSDate(), forKey: "updatedDate")
     }
-}
-
-extension Note: EntityName {
-    static var entityName: String {
-        return Note.classForCoder().description()
-    }
+    
 }

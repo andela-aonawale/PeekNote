@@ -7,14 +7,16 @@
 //
 
 import UIKit
+import CoreData
 
 protocol NoteDetailViewControllerDelegate: class {
-    func didEndEditingNote(note: Note)
+    func noteDetailViewController(controller: NoteDetailViewController, didEndEditingNote note: Note)
 }
 
 class NoteDetailViewController: UIViewController {
 
     var note: Note!
+    var managedObjectContext: NSManagedObjectContext!
     weak var delegate: NoteDetailViewControllerDelegate?
     
     @IBOutlet weak var dateLabel: UILabel!
@@ -25,7 +27,7 @@ class NoteDetailViewController: UIViewController {
         guard note != nil else { return }
         titleTextFiled.text = note.title
         bodyTextView.text = note.body
-        dateLabel.text = note.createdAt.description
+        dateLabel.text = note.createdDateString
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -33,7 +35,7 @@ class NoteDetailViewController: UIViewController {
         view.endEditing(true)
         note.title = titleTextFiled.text!
         note.body = bodyTextView.text
-        delegate?.didEndEditingNote(note)
+        delegate?.noteDetailViewController(self, didEndEditingNote: note)
     }
 
     override func viewDidLoad() {
@@ -46,5 +48,19 @@ class NoteDetailViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    @IBAction func showTags(sender: UIBarButtonItem) {
+        let vc = TagListViewController(style: .Plain)
+        vc.managedObjectContext = managedObjectContext
+        vc.delegate = self
+        let navCon = UINavigationController(rootViewController: vc)
+        presentViewController(navCon, animated: true, completion: nil)
+    }
 
+}
+
+extension NoteDetailViewController: TagListViewControllerDelegate {
+    func tagListViewController(controller: TagListViewController, didSelectTag tag: Tag) {
+        print(tag)
+    }
 }

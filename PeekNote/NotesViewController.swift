@@ -10,15 +10,15 @@ import UIKit
 import CoreData
 
 class NotesViewController: UITableViewController {
-
+    
     var managedObjectContext: NSManagedObjectContext!
-    var fetchedResultsControllerDataSource: FetchedResultsControllerDataSource!
+    var tableViewDataSource: UITableViewFRCDataSource!
     
     // Mark: - Fetched Results Controller
     
     lazy var fetchedResultsController: NSFetchedResultsController = {
         let fetchRequest = NSFetchRequest(entityName: "Note")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "updatedDate", ascending: false)]
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
             managedObjectContext: self.managedObjectContext,
             sectionNameKeyPath: nil,
@@ -29,8 +29,13 @@ class NotesViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
-        fetchedResultsControllerDataSource = FetchedResultsControllerDataSource(tableView: tableView, reuseIdentifier: "Note Cell", fetchedResultsController: fetchedResultsController)
-        fetchedResultsControllerDataSource.delegate = self
+        navigationItem.rightBarButtonItem = editButtonItem()
+        
+        tableView.estimatedRowHeight = tableView.rowHeight
+        tableView.rowHeight = UITableViewAutomaticDimension
+        
+        tableViewDataSource = UITableViewFRCDataSource(tableView: tableView, reuseIdentifier: "Note Cell", fetchedResultsController: fetchedResultsController)
+        tableViewDataSource.delegate = self
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -45,7 +50,6 @@ class NotesViewController: UITableViewController {
     @IBAction func insertNewNote(sender: UIBarButtonItem) {
         let note = Note(title: "", body: "", insertIntoManagedObjectContext: managedObjectContext)
         performSegueWithIdentifier("showDetail", sender: note)
-        managedObjectContext.saveContext()
     }
 
     // MARK: - Segues
@@ -55,7 +59,8 @@ class NotesViewController: UITableViewController {
         guard let identifier = segue.identifier else { return }
         switch identifier {
         case "showDetail":
-            let controller = (segue.destinationViewController).contentViewController as! NoteDetailViewController
+            let controller = segue.destinationViewController.contentViewController as! NoteDetailViewController
+            controller.managedObjectContext = managedObjectContext
             controller.note = sender as! Note
             controller.delegate = self
         default:
@@ -65,16 +70,22 @@ class NotesViewController: UITableViewController {
 }
 
 extension NotesViewController: NoteDetailViewControllerDelegate {
-    func didEndEditingNote(note: Note) {
+    func noteDetailViewController(controller: NoteDetailViewController, didEndEditingNote note: Note) {
         if note.title.isEmpty && note.body.isEmpty {
             managedObjectContext.deleteObject(note)
         }
+        managedObjectContext.saveContext()
     }
 }
 
-extension NotesViewController: FetchedResultsControllerDataSourceDelegate {    
-    func deleteNote(note: Note) {
-        managedObjectContext.deleteObject(note)
+extension NotesViewController: UITableViewFRCDataSourceDelegate {
+    func tableViewFRCDataSource(dataSource: UITableViewFRCDataSource, configureCell cell: UITableViewCell, withObject object: NSManagedObject) {
+        guard let cell = cell as? NoteTableViewCell else { return }
+        cell.note = object as! Note
+    }
+    
+    func tableViewFRCDataSource(dataSource: UITableViewFRCDataSource, deleteObject object: NSManagedObject) {
+        managedObjectContext.deleteObject(object)
         managedObjectContext.saveContext()
     }
 }

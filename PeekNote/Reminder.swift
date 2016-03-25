@@ -10,8 +10,10 @@ import Foundation
 import CoreData
 
 class Reminder: NSManagedObject {
+    
     @NSManaged var date: NSDate
     @NSManaged var repeats: Bool
+    @NSManaged var note: Note?
     
     convenience init(date: NSDate, repeats: Bool, insertIntoManagedObjectContext context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName("Reminder", inManagedObjectContext: context)!
@@ -19,4 +21,5 @@ class Reminder: NSManagedObject {
         self.date = date
         self.repeats = repeats
     }
+    
 }
