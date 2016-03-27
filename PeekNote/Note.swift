@@ -17,7 +17,7 @@ import CoreData
 
 class Note: NSManagedObject {
     
-    @NSManaged var tag: Tag?
+    @NSManaged var tags: Set<Tag>
     @NSManaged var state: State
     @NSManaged var body: String
     @NSManaged var title: String

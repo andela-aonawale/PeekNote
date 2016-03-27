@@ -7,14 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B8A0D4DA40BF7DDC286F0A8 /* Pods_PeekNote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A8159C1A804FD9C42B442FC /* Pods_PeekNote.framework */; };
 		855E40C31CA354A20029F5E9 /* RelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855E40C21CA354A20029F5E9 /* RelativeDateFormatter.swift */; };
 		855E40C51CA354C60029F5E9 /* PersistenceStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855E40C41CA354C60029F5E9 /* PersistenceStack.swift */; };
 		8573383A1CA4AFF6007738E6 /* TagListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857338391CA4AFF6007738E6 /* TagListViewController.swift */; };
-		857338441CA4CFBF007738E6 /* TagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857338421CA4CFBF007738E6 /* TagCell.swift */; };
-		857338451CA4CFBF007738E6 /* TagCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 857338431CA4CFBF007738E6 /* TagCell.xib */; };
 		857338471CA4E1CA007738E6 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857338461CA4E1CA007738E6 /* Tag.swift */; };
-		8573384D1CA4EA6A007738E6 /* TagsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8573384C1CA4EA6A007738E6 /* TagsCollectionViewController.swift */; };
-		8573384F1CA4EBD7007738E6 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8573384E1CA4EBD7007738E6 /* FlowLayout.swift */; };
+		85754A461CA5A1A20023DFAF /* DottedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A451CA5A1A20023DFAF /* DottedLine.swift */; };
+		85754A8F1CA6A2140023DFAF /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A8E1CA6A2140023DFAF /* SearchViewController.swift */; };
+		85754A911CA6C41B0023DFAF /* FilterableFRCDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A901CA6C41B0023DFAF /* FilterableFRCDataSource.swift */; };
+		85754A951CA74B150023DFAF /* TagCellHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 85754A941CA74B150023DFAF /* TagCellHeader.xib */; };
+		85754A971CA74B4A0023DFAF /* TagCellHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A961CA74B4A0023DFAF /* TagCellHeader.swift */; };
 		85B2BDF31CA3D6560024814D /* NoteCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B2BDF21CA3D6560024814D /* NoteCollectionViewCell.swift */; };
 		85B2BDF51CA3D8990024814D /* UICollectionViewFRCDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B2BDF41CA3D8990024814D /* UICollectionViewFRCDataSource.swift */; };
 		85F083B51C9EF78E004CE692 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083B41C9EF78E004CE692 /* AppDelegate.swift */; };
@@ -51,14 +53,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A8159C1A804FD9C42B442FC /* Pods_PeekNote.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PeekNote.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		855E40C21CA354A20029F5E9 /* RelativeDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelativeDateFormatter.swift; sourceTree = "<group>"; };
 		855E40C41CA354C60029F5E9 /* PersistenceStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceStack.swift; sourceTree = "<group>"; };
 		857338391CA4AFF6007738E6 /* TagListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListViewController.swift; sourceTree = "<group>"; };
-		857338421CA4CFBF007738E6 /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
-		857338431CA4CFBF007738E6 /* TagCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagCell.xib; sourceTree = "<group>"; };
 		857338461CA4E1CA007738E6 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
-		8573384C1CA4EA6A007738E6 /* TagsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsCollectionViewController.swift; sourceTree = "<group>"; };
-		8573384E1CA4EBD7007738E6 /* FlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		85754A451CA5A1A20023DFAF /* DottedLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DottedLine.swift; sourceTree = "<group>"; };
+		85754A8E1CA6A2140023DFAF /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		85754A901CA6C41B0023DFAF /* FilterableFRCDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterableFRCDataSource.swift; sourceTree = "<group>"; };
+		85754A941CA74B150023DFAF /* TagCellHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagCellHeader.xib; sourceTree = "<group>"; };
+		85754A961CA74B4A0023DFAF /* TagCellHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCellHeader.swift; sourceTree = "<group>"; };
 		85B2BDF21CA3D6560024814D /* NoteCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteCollectionViewCell.swift; sourceTree = "<group>"; };
 		85B2BDF41CA3D8990024814D /* UICollectionViewFRCDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewFRCDataSource.swift; sourceTree = "<group>"; };
 		85F083B11C9EF78E004CE692 /* PeekNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PeekNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +85,8 @@
 		85F0842F1C9F1599004CE692 /* UITableViewFRCDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewFRCDataSource.swift; sourceTree = "<group>"; };
 		85F084311C9F1B48004CE692 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		85F084341C9F5D54004CE692 /* NoteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteTableViewCell.swift; sourceTree = "<group>"; };
+		B59871193A656AED416F7439 /* Pods-PeekNote.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeekNote.release.xcconfig"; path = "Pods/Target Support Files/Pods-PeekNote/Pods-PeekNote.release.xcconfig"; sourceTree = "<group>"; };
+		D071E1131B8CC1FA6780B648 /* Pods-PeekNote.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeekNote.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PeekNote/Pods-PeekNote.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B8A0D4DA40BF7DDC286F0A8 /* Pods_PeekNote.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,6 +115,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2649C927B9B91C712C97D7E4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D071E1131B8CC1FA6780B648 /* Pods-PeekNote.debug.xcconfig */,
+				B59871193A656AED416F7439 /* Pods-PeekNote.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		3AB9007B5BB1A7F9D733B8F9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1A8159C1A804FD9C42B442FC /* Pods_PeekNote.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8573383B1CA4CDB6007738E6 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
@@ -120,7 +144,7 @@
 		857338481CA4E3BF007738E6 /* Nibs */ = {
 			isa = PBXGroup;
 			children = (
-				857338431CA4CFBF007738E6 /* TagCell.xib */,
+				85754A941CA74B150023DFAF /* TagCellHeader.xib */,
 			);
 			name = Nibs;
 			sourceTree = "<group>";
@@ -130,7 +154,8 @@
 			children = (
 				85F084341C9F5D54004CE692 /* NoteTableViewCell.swift */,
 				85B2BDF21CA3D6560024814D /* NoteCollectionViewCell.swift */,
-				857338421CA4CFBF007738E6 /* TagCell.swift */,
+				85754A451CA5A1A20023DFAF /* DottedLine.swift */,
+				85754A961CA74B4A0023DFAF /* TagCellHeader.swift */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -159,6 +184,8 @@
 				85F083CA1C9EF78F004CE692 /* PeekNoteTests */,
 				85F083D51C9EF78F004CE692 /* PeekNoteUITests */,
 				85F083B21C9EF78E004CE692 /* Products */,
+				2649C927B9B91C712C97D7E4 /* Pods */,
+				3AB9007B5BB1A7F9D733B8F9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -222,7 +249,7 @@
 				85F083B61C9EF78E004CE692 /* NotesViewController.swift */,
 				85F083B81C9EF78E004CE692 /* NoteDetailViewController.swift */,
 				857338391CA4AFF6007738E6 /* TagListViewController.swift */,
-				8573384C1CA4EA6A007738E6 /* TagsCollectionViewController.swift */,
+				85754A8E1CA6A2140023DFAF /* SearchViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -234,7 +261,7 @@
 				855E40C21CA354A20029F5E9 /* RelativeDateFormatter.swift */,
 				85F0842F1C9F1599004CE692 /* UITableViewFRCDataSource.swift */,
 				85B2BDF41CA3D8990024814D /* UICollectionViewFRCDataSource.swift */,
-				8573384E1CA4EBD7007738E6 /* FlowLayout.swift */,
+				85754A901CA6C41B0023DFAF /* FilterableFRCDataSource.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -255,9 +282,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 85F083DB1C9EF78F004CE692 /* Build configuration list for PBXNativeTarget "PeekNote" */;
 			buildPhases = (
+				66CA6B8C162A8ED5A7F3FC1C /* Check Pods Manifest.lock */,
 				85F083AD1C9EF78E004CE692 /* Sources */,
 				85F083AE1C9EF78E004CE692 /* Frameworks */,
 				85F083AF1C9EF78E004CE692 /* Resources */,
+				C638998BF413D824EA43E5EA /* Embed Pods Frameworks */,
+				0F5F79BB3B2E4830FDC793B6 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -352,10 +382,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				857338451CA4CFBF007738E6 /* TagCell.xib in Resources */,
 				85F083C11C9EF78E004CE692 /* LaunchScreen.storyboard in Resources */,
 				85F083BE1C9EF78E004CE692 /* Assets.xcassets in Resources */,
 				85F083BC1C9EF78E004CE692 /* Main.storyboard in Resources */,
+				85754A951CA74B150023DFAF /* TagCellHeader.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,26 +405,75 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0F5F79BB3B2E4830FDC793B6 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PeekNote/Pods-PeekNote-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		66CA6B8C162A8ED5A7F3FC1C /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C638998BF413D824EA43E5EA /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PeekNote/Pods-PeekNote-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		85F083AD1C9EF78E004CE692 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85754A971CA74B4A0023DFAF /* TagCellHeader.swift in Sources */,
 				857338471CA4E1CA007738E6 /* Tag.swift in Sources */,
 				85F084321C9F1B48004CE692 /* Extension.swift in Sources */,
 				85F084271C9F0091004CE692 /* Note.swift in Sources */,
+				85754A8F1CA6A2140023DFAF /* SearchViewController.swift in Sources */,
 				855E40C31CA354A20029F5E9 /* RelativeDateFormatter.swift in Sources */,
-				857338441CA4CFBF007738E6 /* TagCell.swift in Sources */,
 				85F0842C1C9F03FB004CE692 /* Reminder.swift in Sources */,
 				85F084351C9F5D54004CE692 /* NoteTableViewCell.swift in Sources */,
-				8573384F1CA4EBD7007738E6 /* FlowLayout.swift in Sources */,
 				85F084301C9F1599004CE692 /* UITableViewFRCDataSource.swift in Sources */,
+				85754A461CA5A1A20023DFAF /* DottedLine.swift in Sources */,
 				85B2BDF51CA3D8990024814D /* UICollectionViewFRCDataSource.swift in Sources */,
 				855E40C51CA354C60029F5E9 /* PersistenceStack.swift in Sources */,
-				8573384D1CA4EA6A007738E6 /* TagsCollectionViewController.swift in Sources */,
 				85F083B91C9EF78E004CE692 /* NoteDetailViewController.swift in Sources */,
 				85F083B71C9EF78E004CE692 /* NotesViewController.swift in Sources */,
 				85F083B51C9EF78E004CE692 /* AppDelegate.swift in Sources */,
+				85754A911CA6C41B0023DFAF /* FilterableFRCDataSource.swift in Sources */,
 				8573383A1CA4AFF6007738E6 /* TagListViewController.swift in Sources */,
 				85B2BDF31CA3D6560024814D /* NoteCollectionViewCell.swift in Sources */,
 				85F0842A1C9F00F4004CE692 /* Model.xcdatamodeld in Sources */,
@@ -537,6 +616,7 @@
 		};
 		85F083DC1C9EF78F004CE692 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D071E1131B8CC1FA6780B648 /* Pods-PeekNote.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = PeekNote/Info.plist;
@@ -549,6 +629,7 @@
 		};
 		85F083DD1C9EF78F004CE692 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B59871193A656AED416F7439 /* Pods-PeekNote.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = PeekNote/Info.plist;

@@ -11,16 +11,21 @@ import CoreData
 import UIKit
 
 @objc protocol UITableViewFRCDataSourceDelegate: class {
-    optional func  tableViewFRCDataSource(dataSource: UITableViewFRCDataSource, deleteObject object: NSManagedObject)
-    func tableViewFRCDataSource(dataSource: UITableViewFRCDataSource, configureCell cell: UITableViewCell, withObject object: NSManagedObject)
+    optional func viewForHeaderinSection(section: Int) -> UIView?
+    optional func didSearchForText(searchText: String, matches: [NSManagedObject])
+    optional func didSelectCell(cell: UITableViewCell, withObject object: NSManagedObject)
+    optional func didDeselectCell(cell: UITableViewCell, withObject object: NSManagedObject)
+    optional func deleteObject(object: NSManagedObject)
+    optional func searchCancelled()
+    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath, withObject object: NSManagedObject)
 }
 
 class UITableViewFRCDataSource: NSObject {
     
     // MARK: - Properties
-    private var reuseIdentifier: String
-    private var tableView: UITableView
-    private var fetchedResultsController: NSFetchedResultsController!
+    var reuseIdentifier: String
+    var tableView: UITableView
+    var fetchedResultsController: NSFetchedResultsController!
     weak var delegate: UITableViewFRCDataSourceDelegate?
     
     // MARK: - Initialization
@@ -60,14 +65,14 @@ extension UITableViewFRCDataSource: UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath)
         let object = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-        delegate?.tableViewFRCDataSource(self, configureCell: cell, withObject: object)
+        delegate?.configureCell(cell, atIndexPath: indexPath, withObject: object)
         return cell
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             let object = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-            delegate?.tableViewFRCDataSource?(self, deleteObject: object)
+            delegate?.deleteObject?(object)
         }
     }
     

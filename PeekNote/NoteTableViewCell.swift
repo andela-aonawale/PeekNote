@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import TagListView
 
 class NoteTableViewCell: UITableViewCell {
     
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var body: UILabel!
     @IBOutlet weak var date: UILabel!
+    @IBOutlet weak var tagListView: TagListView!
     
     var note: Note! {
         didSet {
@@ -25,6 +27,13 @@ class NoteTableViewCell: UITableViewCell {
         title.text = note.title
         body.text = note.body
         date.text = note.createdDateString
+        tagListView.removeAllTags()
+        note.tags.forEach { tagListView.addTag($0.name) }
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        tagListView.alignment = .Right
     }
     
 }

@@ -13,7 +13,7 @@ class NotesViewController: UITableViewController {
     
     var managedObjectContext: NSManagedObjectContext!
     var tableViewDataSource: UITableViewFRCDataSource!
-    
+        
     // Mark: - Fetched Results Controller
     
     lazy var fetchedResultsController: NSFetchedResultsController = {
@@ -79,12 +79,12 @@ extension NotesViewController: NoteDetailViewControllerDelegate {
 }
 
 extension NotesViewController: UITableViewFRCDataSourceDelegate {
-    func tableViewFRCDataSource(dataSource: UITableViewFRCDataSource, configureCell cell: UITableViewCell, withObject object: NSManagedObject) {
+    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath, withObject object: NSManagedObject) {
         guard let cell = cell as? NoteTableViewCell else { return }
         cell.note = object as! Note
     }
     
-    func tableViewFRCDataSource(dataSource: UITableViewFRCDataSource, deleteObject object: NSManagedObject) {
+    func deleteObject(object: NSManagedObject) {
         managedObjectContext.deleteObject(object)
         managedObjectContext.saveContext()
     }

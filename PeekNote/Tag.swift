@@ -12,7 +12,7 @@ import CoreData
 class Tag: NSManagedObject {
     
     @NSManaged var name: String
-    @NSManaged var note: Note?
+    @NSManaged var notes: Set<Note>
     
     convenience init(name: String, insertIntoManagedObjectContext context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName("Tag", inManagedObjectContext: context)!

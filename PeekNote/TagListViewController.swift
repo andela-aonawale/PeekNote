@@ -9,18 +9,17 @@
 import UIKit
 import CoreData
 
-protocol TagListViewControllerDelegate: class {
-    func tagListViewController(controller: TagListViewController, didSelectTag tag: Tag)
-}
-
 private let reuseIdentifier = "Tag Cell"
 
 class TagListViewController: UITableViewController {
     
-    private var textField: UITextField!
-    weak var delegate: TagListViewControllerDelegate?
+    var note: Note!
+    let searchBar = UISearchBar()
     var managedObjectContext: NSManagedObjectContext!
-    var tableViewDataSource: UITableViewFRCDataSource!
+    private var tableViewDataSource: FilterableFRCDataSource!
+    
+    let nib = UINib(nibName: "TagCellHeader", bundle: nil)
+    var headerView: TagCellHeader!
     
     // Mark: - Fetched Results Controller
     
@@ -35,58 +34,115 @@ class TagListViewController: UITableViewController {
     }()
     
     func dismiss() {
+        searchBar.resignFirstResponder()
         dismissViewControllerAnimated(true, completion: nil)
     }
     
     func addTag() {
-        guard let name = textField.text else { return }
+        guard let name = searchBar.text where !name.isEmpty else { return }
+        searchBar.resignFirstResponder()
+        tableView.reloadData()
         _ = Tag(name: name, insertIntoManagedObjectContext: managedObjectContext)
-        managedObjectContext.saveContext()
-        textField.text?.removeAll()
+        searchBar.text?.removeAll()
+        setTableViewHeaderHidden(true)
+    }
+    
+    func setTableViewHeaderHidden(hidden: Bool) {
+        if hidden {
+            UIView.animateWithDuration(0.2) {
+                self.tableView.contentInset = UIEdgeInsets(top: -50, left: 0, bottom: 0, right: 0)
+            }
+        } else {
+            UIView.animateWithDuration(0.2) {
+                self.tableView.contentInset = UIEdgeInsetsZero
+            }
+        }
+    }
+    
+    func configureTableHeader() {
+        headerView = nib.instantiateWithOwner(nil, options: nil)[0] as! TagCellHeader
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(addTag))
+        headerView.addGestureRecognizer(gesture)
+        tableView.contentInset = UIEdgeInsets(top: -50, left: 0, bottom: 0, right: 0)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        textField = UITextField(frame: CGRect(origin: CGPointZero, size: CGSize(width: view.frame.width, height: 44)))
-        textField.placeholder = "Add tag"
-        textField.textColor = UIColor.whiteColor()
-        navigationItem.titleView = textField
-        textField.delegate = self
+        searchBar.placeholder = "Add tag"
+        navigationItem.titleView = searchBar
+        
+        configureTableHeader()
         
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         tableView.tableFooterView = UIView()
+        tableView.allowsMultipleSelection = true
         
-        tableViewDataSource = UITableViewFRCDataSource(tableView: tableView, reuseIdentifier: reuseIdentifier, fetchedResultsController: fetchedResultsController)
+        tableViewDataSource = FilterableFRCDataSource(tableView: tableView, reuseIdentifier: reuseIdentifier, fetchedResultsController: fetchedResultsController, searchBar: searchBar)
         tableViewDataSource.delegate = self
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addTag))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(dismiss))
-        navigationItem.rightBarButtonItem?.enabled = false
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(dismiss))
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        managedObjectContext.saveContext()
     }
 
-}
-
-extension TagListViewController: UITextFieldDelegate {
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        let newString = (textField.text! as NSString).stringByReplacingCharactersInRange(range, withString: string)
-        navigationItem.rightBarButtonItem?.enabled = !newString.isEmpty
-        return true
-    }
 }
 
 extension TagListViewController {
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        delegate?.tagListViewController(self, didSelectTag: fetchedResultsController.objectAtIndexPath(indexPath) as! Tag)
+        let tag = fetchedResultsController.objectAtIndexPath(indexPath) as! Tag
+        note.tags.insert(tag)
+        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
+    
+    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        let tag = fetchedResultsController.objectAtIndexPath(indexPath) as! Tag
+        note.tags.remove(tag)
+        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+    }
+    
+    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return headerView
+    }
+    
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
 }
 
 extension TagListViewController: UITableViewFRCDataSourceDelegate {
-    func tableViewFRCDataSource(dataSource: UITableViewFRCDataSource, configureCell cell: UITableViewCell, withObject object: NSManagedObject) {
-        cell.textLabel?.text = (object as! Tag).name
+    
+    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath, withObject object: NSManagedObject) {
+        let tag = object as! Tag
+        cell.textLabel?.text = tag.name
+        cell.selectionStyle = .None
+        if note.tags.contains(tag) {
+            tableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: .None)
+            cell.accessoryType = .Checkmark
+        } else {
+            cell.accessoryType = .None
+        }
     }
     
-    func tableViewFRCDataSource(dataSource: UITableViewFRCDataSource, deleteObject object: NSManagedObject) {
+    func deleteObject(object: NSManagedObject) {
         managedObjectContext.deleteObject(object)
-        managedObjectContext.saveContext()
     }
+    
+    func searchCancelled() {
+        dismiss()
+    }
+    
+    func didSearchForText(searchText: String, matches: [NSManagedObject]) {
+        if searchText.characters.isEmpty || matches.count > 0 {
+            setTableViewHeaderHidden(true)
+        } else {
+            setTableViewHeaderHidden(false)
+        }
+        headerView.textLabel.text = "\"\(searchText)\""
+    }
+    
 }
