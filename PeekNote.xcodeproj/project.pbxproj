@@ -17,6 +17,7 @@
 		85754A911CA6C41B0023DFAF /* FilterableFRCDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A901CA6C41B0023DFAF /* FilterableFRCDataSource.swift */; };
 		85754A951CA74B150023DFAF /* TagCellHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 85754A941CA74B150023DFAF /* TagCellHeader.xib */; };
 		85754A971CA74B4A0023DFAF /* TagCellHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A961CA74B4A0023DFAF /* TagCellHeader.swift */; };
+		85754A991CA770050023DFAF /* NotePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A981CA770050023DFAF /* NotePreviewViewController.swift */; };
 		85B2BDF31CA3D6560024814D /* NoteCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B2BDF21CA3D6560024814D /* NoteCollectionViewCell.swift */; };
 		85B2BDF51CA3D8990024814D /* UICollectionViewFRCDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B2BDF41CA3D8990024814D /* UICollectionViewFRCDataSource.swift */; };
 		85F083B51C9EF78E004CE692 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083B41C9EF78E004CE692 /* AppDelegate.swift */; };
@@ -63,6 +64,7 @@
 		85754A901CA6C41B0023DFAF /* FilterableFRCDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterableFRCDataSource.swift; sourceTree = "<group>"; };
 		85754A941CA74B150023DFAF /* TagCellHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagCellHeader.xib; sourceTree = "<group>"; };
 		85754A961CA74B4A0023DFAF /* TagCellHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCellHeader.swift; sourceTree = "<group>"; };
+		85754A981CA770050023DFAF /* NotePreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotePreviewViewController.swift; sourceTree = "<group>"; };
 		85B2BDF21CA3D6560024814D /* NoteCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteCollectionViewCell.swift; sourceTree = "<group>"; };
 		85B2BDF41CA3D8990024814D /* UICollectionViewFRCDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewFRCDataSource.swift; sourceTree = "<group>"; };
 		85F083B11C9EF78E004CE692 /* PeekNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PeekNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -250,6 +252,7 @@
 				85F083B81C9EF78E004CE692 /* NoteDetailViewController.swift */,
 				857338391CA4AFF6007738E6 /* TagListViewController.swift */,
 				85754A8E1CA6A2140023DFAF /* SearchViewController.swift */,
+				85754A981CA770050023DFAF /* NotePreviewViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -463,6 +466,7 @@
 				85F084321C9F1B48004CE692 /* Extension.swift in Sources */,
 				85F084271C9F0091004CE692 /* Note.swift in Sources */,
 				85754A8F1CA6A2140023DFAF /* SearchViewController.swift in Sources */,
+				85754A991CA770050023DFAF /* NotePreviewViewController.swift in Sources */,
 				855E40C31CA354A20029F5E9 /* RelativeDateFormatter.swift in Sources */,
 				85F0842C1C9F03FB004CE692 /* Reminder.swift in Sources */,
 				85F084351C9F5D54004CE692 /* NoteTableViewCell.swift in Sources */,

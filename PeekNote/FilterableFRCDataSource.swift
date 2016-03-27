@@ -104,4 +104,8 @@ extension FilterableFRCDataSource: UISearchBarDelegate {
         delegate?.searchCancelled?()
     }
     
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        filteredObjects = fetchedResultsController.fetchedObjects as! [NSManagedObject]
+    }
+    
 }

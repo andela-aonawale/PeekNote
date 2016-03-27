@@ -26,10 +26,7 @@ class NoteDetailViewController: UIViewController {
     @IBOutlet weak var tagListView: TagListView!
     @IBOutlet weak var remindButton: UIButton!
     @IBOutlet weak var deleteReminderButton: UIButton!
-
-    @IBAction func textDidChange(sender: UITextField) {
-        canAddTagToNote()
-    }
+    
     func configureView() {
         guard note != nil else { return }
         titleTextFiled.text = note.title
@@ -81,6 +78,10 @@ class NoteDetailViewController: UIViewController {
         // TODO: delete reminder from note
     }
     
+    @IBAction func textDidChange(sender: UITextField) {
+        canAddTagToNote()
+    }
+    
     func canAddTagToNote() -> Bool {
         navigationItem.rightBarButtonItem?.enabled = !titleTextFiled.text!.isEmpty || !bodyTextView.text.isEmpty
         return true
@@ -94,4 +95,12 @@ extension NoteDetailViewController: UITextViewDelegate {
         canAddTagToNote()
     }
     
+}
+
+extension NoteDetailViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        view.endEditing(true)
+    }
+
 }
