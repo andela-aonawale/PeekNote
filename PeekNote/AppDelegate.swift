@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SWRevealViewController
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
@@ -18,20 +19,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Override point for customization after application launch.
         persistenceStack = PersistenceStack.sharedStack()
         
-        let splitViewController = self.window!.rootViewController as! UISplitViewController
-        let navigationController = splitViewController.viewControllers.last as! UINavigationController
-        navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
-        splitViewController.delegate = self
-        
-        let nav = splitViewController.viewControllers.first as! UINavigationController
-        let notesVC = nav.topViewController as! NotesViewController
-        notesVC.managedObjectContext = persistenceStack.managedObjectContext
+//        let splitViewController = (window!.rootViewController as! SWRevealViewController).frontViewController as! UISplitViewController
+//
+//        let nav = splitViewController.viewControllers.first as! UINavigationController
+//        let notesVC = nav.topViewController as! NotesViewController
+//        notesVC.managedObjectContext = persistenceStack.managedObjectContext
         
         UINavigationBar.appearance().barStyle = UIBarStyle.Black
         UINavigationBar.appearance().translucent = false
-        UINavigationBar.appearance().barTintColor = UIColor(red:0.00, green:0.52, blue:1.00, alpha:1.00)
+        UINavigationBar.appearance().barTintColor = UIColor(red:0.98, green:0.74, blue:0.02, alpha:1.00)
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
-        window?.tintColor = UIColor(red:0.00, green:0.52, blue:1.00, alpha:1.00)
+        window?.tintColor = UIColor(red:0.98, green:0.74, blue:0.02, alpha:1.00)
         
         return true
     }

@@ -10,15 +10,10 @@ import UIKit
 import CoreData
 import TagListView
 
-protocol NoteDetailViewControllerDelegate: class {
-    func noteDetailViewController(controller: NoteDetailViewController, didEndEditingNote note: Note)
-}
-
 class NoteDetailViewController: UIViewController {
 
     var note: Note!
     var managedObjectContext: NSManagedObjectContext!
-    weak var delegate: NoteDetailViewControllerDelegate?
     
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var titleTextFiled: UITextField!
@@ -40,13 +35,17 @@ class NoteDetailViewController: UIViewController {
         super.viewWillDisappear(animated)
         view.endEditing(true)
         guard presentedViewController == nil else { return }
+        guard note != nil else { return }
         note.title = titleTextFiled.text!
         note.body = bodyTextView.text
-        delegate?.noteDetailViewController(self, didEndEditingNote: note)
+        if note.title.isEmpty && note.body.isEmpty {
+            managedObjectContext.deleteObject(note)
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        guard note != nil else { return }
         tagListView.removeAllTags()
         note.tags.forEach { tagListView.addTag($0.name) }
     }

@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import PeekPop
+import SWRevealViewController
 
 class NotesViewController: UITableViewController {
     
@@ -16,6 +17,8 @@ class NotesViewController: UITableViewController {
     var peekLocation: CGPoint?
     var managedObjectContext: NSManagedObjectContext!
     var tableViewDataSource: UITableViewFRCDataSource!
+    
+    @IBOutlet weak var menuButton: UIBarButtonItem!
         
     // Mark: - Fetched Results Controller
     
@@ -25,23 +28,47 @@ class NotesViewController: UITableViewController {
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
             managedObjectContext: self.managedObjectContext,
             sectionNameKeyPath: nil,
-            cacheName: nil)
+            cacheName: "NotesCache")
         return fetchedResultsController
     }()
+    
+    func configurePeekPop() {
+        peekPop = PeekPop(viewController: self)
+        peekPop?.registerForPreviewingWithDelegate(self, sourceView: tableView)
+    }
+    
+    func configureDataSource() {
+        managedObjectContext = PersistenceStack.sharedStack().managedObjectContext
+        tableViewDataSource = UITableViewFRCDataSource(tableView: tableView, reuseIdentifier: "Note Cell", fetchedResultsController: fetchedResultsController)
+        tableViewDataSource.delegate = self
+    }
+    
+    func configureTableView() {
+        tableView.tableFooterView = UIView()
+        tableView.estimatedRowHeight = tableView.rowHeight
+        tableView.rowHeight = UITableViewAutomaticDimension
+    }
+    
+    func configureSidebar() {
+        guard let revealViewController = revealViewController() else { return }
+        menuButton.target = revealViewController
+        menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
+        view.addGestureRecognizer(revealViewController.panGestureRecognizer())
+    }
+    
+    func configureNavigation() {
+        navigationItem.rightBarButtonItem = editButtonItem()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableFooterView = UIView()
-        navigationItem.rightBarButtonItem = editButtonItem()
+        configureDataSource()
+        configureNavigation()
+        configurePeekPop()
+        configureTableView()
+        configureSidebar()
         
-        peekPop = PeekPop(viewController: self)
-        peekPop?.registerForPreviewingWithDelegate(self, sourceView: tableView)
-        
-        tableView.estimatedRowHeight = tableView.rowHeight
-        tableView.rowHeight = UITableViewAutomaticDimension
-        
-        tableViewDataSource = UITableViewFRCDataSource(tableView: tableView, reuseIdentifier: "Note Cell", fetchedResultsController: fetchedResultsController)
-        tableViewDataSource.delegate = self
+        splitViewController?.delegate = self
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -57,7 +84,7 @@ class NotesViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
     @IBAction func insertNewNote(sender: UIBarButtonItem) {
         let note = Note(title: "", body: "", insertIntoManagedObjectContext: managedObjectContext)
         performSegueWithIdentifier("showDetail", sender: note)
@@ -73,11 +100,24 @@ class NotesViewController: UITableViewController {
             let controller = segue.destinationViewController.contentViewController as! NoteDetailViewController
             controller.managedObjectContext = managedObjectContext
             controller.note = sender as! Note
-            controller.delegate = self
         default:
             break
         }
     }
+}
+
+extension NotesViewController: UISplitViewControllerDelegate {
+    
+    // MARK: - Split view
+    
+    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
+        guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
+        guard let viewController = secondaryAsNavController.topViewController as? NoteDetailViewController else { return false }
+        // Return true to indicate that we have handled the collapse by doing nothing;
+        //the secondary controller will be discarded.
+        return viewController.note == nil
+    }
+    
 }
 
 extension NotesViewController: PeekPopPreviewingDelegate {
@@ -99,17 +139,6 @@ extension NotesViewController: PeekPopPreviewingDelegate {
         let indexPath = tableView.indexPathForRowAtPoint(location)!
         let note = fetchedResultsController.objectAtIndexPath(indexPath)
         performSegueWithIdentifier("showDetail", sender: note)
-    }
-    
-}
-
-extension NotesViewController: NoteDetailViewControllerDelegate {
-    
-    func noteDetailViewController(controller: NoteDetailViewController, didEndEditingNote note: Note) {
-        if note.title.isEmpty && note.body.isEmpty {
-            managedObjectContext.deleteObject(note)
-        }
-        managedObjectContext.saveContext()
     }
     
 }

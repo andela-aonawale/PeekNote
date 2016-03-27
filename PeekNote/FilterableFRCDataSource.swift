@@ -57,32 +57,6 @@ class FilterableFRCDataSource: UITableViewFRCDataSource {
     
 }
 
-//extension FilterableFRCDataSource: UITableViewDelegate {
-//    
-//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        var object: NSManagedObject
-//        let cell = tableView.cellForRowAtIndexPath(indexPath)!
-//        if searchBar.isFirstResponder() {
-//            object = filteredObjects[indexPath.row]
-//        } else {
-//            object = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-//        }
-//        delegate?.didSelectCell?(cell, withObject: object)
-//    }
-//    
-//    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-//        var object: NSManagedObject
-//        let cell = tableView.cellForRowAtIndexPath(indexPath)!
-//        if searchBar.isFirstResponder() {
-//            object = filteredObjects[indexPath.row]
-//        } else {
-//            object = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-//        }
-//        delegate?.didDeselectCell?(cell, withObject: object)
-//    }
-//    
-//}
-
 extension FilterableFRCDataSource: UISearchBarDelegate {
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
