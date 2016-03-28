@@ -82,11 +82,6 @@ class TagListViewController: UITableViewController {
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(dismiss))
     }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        managedObjectContext.saveContext()
-    }
 
 }
 

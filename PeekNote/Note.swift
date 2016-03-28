@@ -25,18 +25,6 @@ class Note: NSManagedObject {
     @NSManaged var updatedDate: NSDate
     @NSManaged var creationDate: NSDate
     
-    static let dateFormatter: RelativeDateFormatter = {
-        return RelativeDateFormatter()
-    }()
-    
-    // transient properties
-    var createdDateString: String {
-        return Note.dateFormatter.stringForDate(creationDate)
-    }
-    var updatedDateString: String {
-        return Note.dateFormatter.stringForDate(updatedDate)
-    }
-    
     convenience init(title: String, body: String, insertIntoManagedObjectContext context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName("Note", inManagedObjectContext: context)!
         self.init(entity: entity, insertIntoManagedObjectContext: context)
@@ -48,6 +36,7 @@ class Note: NSManagedObject {
         super.awakeFromInsert()
         setPrimitiveValue(NSDate(), forKey: "creationDate")
         setPrimitiveValue(NSDate(), forKey: "updatedDate")
+        state = .Normal
     }
     
 }

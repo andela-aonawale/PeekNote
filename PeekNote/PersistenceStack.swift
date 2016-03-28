@@ -111,17 +111,3 @@ class PersistenceStack {
     }
     
 }
-
-extension NSManagedObjectContext {
-    func saveContext() {
-        if hasChanges {
-            do {
-                try save()
-            } catch {
-                let nserror = error as NSError
-                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                abort()
-            }
-        }
-    }
-}

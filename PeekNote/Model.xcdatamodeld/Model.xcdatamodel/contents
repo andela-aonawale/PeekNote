@@ -2,12 +2,10 @@
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Xcode 7.0">
     <entity name="Note" representedClassName=".Note" syncable="YES">
         <attribute name="body" attributeType="String" syncable="YES"/>
-        <attribute name="createdDateString" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="creationDate" attributeType="Date" syncable="YES"/>
         <attribute name="state" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="title" attributeType="String" syncable="YES"/>
         <attribute name="updatedDate" attributeType="Date" syncable="YES"/>
-        <attribute name="updatedDateString" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <relationship name="reminder" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Reminder" inverseName="note" inverseEntity="Reminder" syncable="YES"/>
         <relationship name="tags" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="notes" inverseEntity="Tag" syncable="YES"/>
     </entity>
@@ -21,7 +19,7 @@
         <relationship name="notes" toMany="YES" deletionRule="Nullify" destinationEntity="Note" inverseName="tags" inverseEntity="Note" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Note" positionX="-63" positionY="-18" width="128" height="180"/>
+        <element name="Note" positionX="-63" positionY="-18" width="128" height="150"/>
         <element name="Reminder" positionX="-54" positionY="18" width="128" height="90"/>
         <element name="Tag" positionX="-54" positionY="27" width="128" height="75"/>
     </elements>

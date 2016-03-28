@@ -11,6 +11,8 @@ import CoreData
 import PeekPop
 import SWRevealViewController
 
+private let cacheName = "NotesCache"
+
 class NotesViewController: UITableViewController {
     
     var peekPop: PeekPop?
@@ -18,17 +20,24 @@ class NotesViewController: UITableViewController {
     var managedObjectContext: NSManagedObjectContext!
     var tableViewDataSource: UITableViewFRCDataSource!
     
+    var fetchPredicate: NSPredicate? {
+        didSet {
+            NSFetchedResultsController.deleteCacheWithName(cacheName)
+        }
+    }
+    
     @IBOutlet weak var menuButton: UIBarButtonItem!
         
     // Mark: - Fetched Results Controller
     
     lazy var fetchedResultsController: NSFetchedResultsController = {
         let fetchRequest = NSFetchRequest(entityName: "Note")
+        fetchRequest.predicate = self.fetchPredicate
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "updatedDate", ascending: false)]
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
             managedObjectContext: self.managedObjectContext,
             sectionNameKeyPath: nil,
-            cacheName: "NotesCache")
+            cacheName: cacheName)
         return fetchedResultsController
     }()
     
@@ -38,7 +47,6 @@ class NotesViewController: UITableViewController {
     }
     
     func configureDataSource() {
-        managedObjectContext = PersistenceStack.sharedStack().managedObjectContext
         tableViewDataSource = UITableViewFRCDataSource(tableView: tableView, reuseIdentifier: "Note Cell", fetchedResultsController: fetchedResultsController)
         tableViewDataSource.delegate = self
     }
@@ -67,7 +75,6 @@ class NotesViewController: UITableViewController {
         configurePeekPop()
         configureTableView()
         configureSidebar()
-        
         splitViewController?.delegate = self
     }
 
@@ -152,7 +159,6 @@ extension NotesViewController: UITableViewFRCDataSourceDelegate {
     
     func deleteObject(object: NSManagedObject) {
         managedObjectContext.deleteObject(object)
-        managedObjectContext.saveContext()
     }
     
 }

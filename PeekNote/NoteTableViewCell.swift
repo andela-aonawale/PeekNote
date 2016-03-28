@@ -26,7 +26,7 @@ class NoteTableViewCell: UITableViewCell {
         guard note != nil else { return }
         title.text = note.title
         body.text = note.body
-        date.text = note.createdDateString
+        date.text = note.creationDate.prettified
         tagListView.removeAllTags()
         note.tags.forEach { tagListView.addTag($0.name) }
     }

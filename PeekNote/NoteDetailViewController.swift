@@ -26,7 +26,7 @@ class NoteDetailViewController: UIViewController {
         guard note != nil else { return }
         titleTextFiled.text = note.title
         bodyTextView.text = note.body
-        dateLabel.text = note.createdDateString
+        dateLabel.text = note.creationDate.prettified
         tagListView.alignment = .Right
         navigationItem.rightBarButtonItem?.enabled = !note.title.isEmpty || !note.body.isEmpty
     }

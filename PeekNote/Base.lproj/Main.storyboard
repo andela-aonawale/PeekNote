@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="l6b-pS-Pyq">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -133,58 +133,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FIy-77-n5Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="990" y="-630"/>
-        </scene>
-        <!--Reveal View Controller-->
-        <scene sceneID="Kbi-E9-bkx">
-            <objects>
-                <viewController id="l6b-pS-Pyq" customClass="SWRevealViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ek7-2L-0i8"/>
-                        <viewControllerLayoutGuide type="bottom" id="WJx-kB-uA6"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="SQC-OB-K5L">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-                    <connections>
-                        <segue destination="rbX-Kn-ZOg" kind="custom" identifier="sw_rear" customClass="SWRevealViewControllerSegueSetController" id="RVZ-gV-8WF"/>
-                        <segue destination="H1p-Uh-vWS" kind="custom" identifier="sw_front" customClass="SWRevealViewControllerSegueSetController" id="r3j-Ph-LXM"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="iBt-Ur-ncw" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-856" y="-1290"/>
-        </scene>
-        <!--Side Menu View Controller-->
-        <scene sceneID="eRJ-KT-1jt">
-            <objects>
-                <tableViewController id="rbX-Kn-ZOg" customClass="SideMenuViewController" customModule="PeekNote" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="pEf-HN-GnL">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sidebar Cell" id="Pnd-uR-hUV">
-                                <rect key="frame" x="0.0" y="28" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Pnd-uR-hUV" id="74i-1Y-0y5">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="rbX-Kn-ZOg" id="ssk-8r-Orl"/>
-                            <outlet property="delegate" destination="rbX-Kn-ZOg" id="cNA-wY-YPw"/>
-                        </connections>
-                    </tableView>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dcc-fi-X1Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-264" y="-1290"/>
         </scene>
         <!--Notes-->
         <scene sceneID="pY4-Hu-kfo">
@@ -399,7 +347,7 @@
         <!--Split View Controller-->
         <scene sceneID="Nki-YV-4Qg">
             <objects>
-                <splitViewController id="H1p-Uh-vWS" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="SplitViewController" id="H1p-Uh-vWS" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
@@ -414,7 +362,7 @@
         <!--Notes-->
         <scene sceneID="smW-Zh-WAh">
             <objects>
-                <tableViewController id="7bK-jq-Zjz" customClass="NotesViewController" customModule="PeekNote" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="NotesViewController" id="7bK-jq-Zjz" customClass="NotesViewController" customModule="PeekNote" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="88" sectionHeaderHeight="22" sectionFooterHeight="22" id="r7i-6Z-zg0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -483,6 +431,7 @@
                                         <constraint firstItem="UWA-3v-Tpl" firstAttribute="top" secondItem="vDZ-jo-j9Z" secondAttribute="bottom" constant="8" id="rdP-Yg-4f0"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="sIW-dh-rEW" secondAttribute="bottom" id="sSz-yr-4Qv"/>
                                         <constraint firstItem="vDZ-jo-j9Z" firstAttribute="top" secondItem="37f-cq-3Eg" secondAttribute="topMargin" id="xVp-nQ-4i4"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="sIW-dh-rEW" secondAttribute="bottom" constant="2" id="yff-8Q-TYM"/>
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">
