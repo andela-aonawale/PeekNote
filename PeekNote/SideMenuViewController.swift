@@ -105,20 +105,26 @@ class SideMenuViewController: UITableViewController {
         let revealController = revealViewController()
         var predicate: NSPredicate?
         let path = (indexPath.section, indexPath.row)
+        var title: String?
         
         switch path {
         case let (section, row) where section == currentIndexPath.section && row == currentIndexPath.row:
             revealController.setFrontViewPosition(FrontViewPosition.Left, animated: true)
             return
         case let (section, row) where section == 0 && row == 0:
+            title = "Notes"
             predicate = NSPredicate(format: "state == \(State.Normal.rawValue)")
         case let (section, row) where section == 0 && row == 1:
+            title = "Reminders"
             predicate = NSPredicate(format: "reminder != nil")
         case let (section, row) where section == 1:
+            title = "Notes"
             predicate = NSPredicate(format: "tags contains[c] %@", tags![row])
         case let (section, row) where section == 2 && row == 0:
+            title = "Archive"
             predicate = NSPredicate(format: "state == \(State.Archived.rawValue)")
         case let (section, row) where section == 2 && row == 1:
+            title = "Trash"
             predicate = NSPredicate(format: "state == \(State.Trashed.rawValue)")
         default:
             break
@@ -131,6 +137,7 @@ class SideMenuViewController: UITableViewController {
         let notesVC = nav.topViewController as! NotesViewController
         notesVC.managedObjectContext = managedObjectContext
         notesVC.fetchPredicate = predicate
+        notesVC.title = title
         
         revealController.pushFrontViewController(splitViewController, animated: true)
         currentIndexPath = indexPath

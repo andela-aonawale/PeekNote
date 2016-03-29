@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import PeekPop
 import SWRevealViewController
+import MCSwipeTableViewCell
 
 private let cacheName = "NotesCache"
 
@@ -43,7 +44,7 @@ class NotesViewController: UITableViewController {
     
     func configurePeekPop() {
         peekPop = PeekPop(viewController: self)
-        peekPop?.registerForPreviewingWithDelegate(self, sourceView: tableView)
+//        peekPop?.registerForPreviewingWithDelegate(self, sourceView: tableView)
     }
     
     func configureDataSource() {
@@ -152,9 +153,91 @@ extension NotesViewController: PeekPopPreviewingDelegate {
 
 extension NotesViewController: UITableViewFRCDataSourceDelegate {
     
+    func viewWithImageNamed(name: String, labelName: String) -> UIView {
+        let image = UIImageView(image: UIImage(named: name))
+        image.contentMode = .Center
+        image.translatesAutoresizingMaskIntoConstraints = false
+        
+        let label = UILabel()
+        label.text = labelName
+        label.textColor = .whiteColor()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        let view = UIView()
+        view.addSubview(image)
+        view.addSubview(label)
+        
+        let c1 = NSLayoutConstraint(item: label, attribute: .CenterX, relatedBy: .Equal, toItem: view, attribute: .CenterX, multiplier: 1, constant: 0)
+        let c2 = NSLayoutConstraint(item: label, attribute: .CenterY, relatedBy: .Equal, toItem: view, attribute: .CenterY, multiplier: 1, constant: 20)
+        
+        let c3 = NSLayoutConstraint(item: image, attribute: .CenterX, relatedBy: .Equal, toItem: view, attribute: .CenterX, multiplier: 1, constant: 0)
+        let c4 = NSLayoutConstraint(item: image, attribute: .CenterY, relatedBy: .Equal, toItem: view, attribute: .CenterY, multiplier: 1, constant: -10)
+        
+        view.addConstraints([c1, c2, c3, c4])
+        return view
+    }
+    
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath, withObject object: NSManagedObject) {
         guard let cell = cell as? NoteTableViewCell else { return }
-        cell.note = object as! Note
+        guard let note = object as? Note else { return }
+        cell.note = note
+        cell.firstTrigger = 0.4
+        cell.secondTrigger = 0.6
+        cell.defaultColor = UIColor.lightGrayColor()
+        customizeCell(cell, forState: note.state)
+    }
+
+    typealias CellStyle = (firstView: UIView, secondView: UIView, firstColor: UIColor, secondColor: UIColor)
+    
+    func cellStyleForState(state: State) -> CellStyle {
+        var firstView: UIView!
+        var secondView: UIView!
+        var firstColor: UIColor!
+        var secondColor: UIColor!
+        
+        switch state {
+        case .Normal:
+            firstView = viewWithImageNamed("Archive Filled", labelName: "Archive")
+            secondView = viewWithImageNamed("Trash Filled", labelName: "Trash")
+            firstColor = UIColor(red: 0.29, green: 0.31, blue: 0.33, alpha: 1.00)
+            secondColor = UIColor(red:0.90, green: 0.23, blue: 0.05, alpha: 1.00)
+        case .Archived:
+            firstView = viewWithImageNamed("Delete Archive Filled", labelName: "Unarchive")
+            secondView = viewWithImageNamed("Trash Filled", labelName: "Trash")
+            firstColor = UIColor(red: 0.29, green: 0.31, blue: 0.33, alpha: 1.00)
+            secondColor = UIColor(red:0.90, green: 0.23, blue: 0.05, alpha: 1.00)
+        case .Trashed:
+            firstView = viewWithImageNamed("Recover Trash", labelName: "Recover")
+            secondView = viewWithImageNamed("Delete Filled", labelName: "Delete")
+            firstColor = UIColor(red: 0.29, green: 0.31, blue: 0.33, alpha: 1.00)
+            secondColor = UIColor(red:0.90, green: 0.23, blue: 0.05, alpha: 1.00)
+        }
+        
+        return (firstView, secondView, firstColor, secondColor)
+    }
+    
+    func customizeCell(cell: MCSwipeTableViewCell, forState noteState: State) {
+        let style = cellStyleForState(noteState)
+        cell.setSwipeGestureWithView(style.firstView, color: style.firstColor, mode: .Exit, state: .State3) { cell, state, mode in
+            self.commitCell(cell, toState: state, withNoteState: noteState)
+        }
+        cell.setSwipeGestureWithView(style.secondView, color: style.secondColor, mode: .Exit, state: .State4) { cell, state, mode in
+            self.commitCell(cell, toState: state, withNoteState: noteState)
+        }
+    }
+    
+    func commitCell(cell: MCSwipeTableViewCell, toState state: MCSwipeTableViewCellState, withNoteState noteState: State) {
+        guard let indexPath = tableView.indexPathForCell(cell) else { return }
+        guard let note = fetchedResultsController.objectAtIndexPath(indexPath) as? Note else { return }
+        
+        switch noteState {
+        case .Normal:
+            (state == .State3) ? (note.state = .Archived) : (note.state = .Trashed)
+        case .Archived:
+            state == .State3 ? (note.state = .Normal) : (note.state = .Trashed)
+        case .Trashed:
+            state == .State3 ? (note.state = .Normal) : managedObjectContext.deleteObject(note)
+        }
     }
     
     func deleteObject(object: NSManagedObject) {
