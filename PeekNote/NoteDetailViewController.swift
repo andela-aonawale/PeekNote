@@ -15,6 +15,7 @@ class NoteDetailViewController: UIViewController {
     var note: Note!
     var managedObjectContext: NSManagedObjectContext!
     
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var titleTextFiled: UITextField!
     @IBOutlet weak var bodyTextView: UITextView!
@@ -33,7 +34,10 @@ class NoteDetailViewController: UIViewController {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        unsubscribeToKeyboardNotifications()
         view.endEditing(true)
+        // make sure we are returning to NotesViewController
+        // and not presenting tags view controller
         guard presentedViewController == nil else { return }
         guard note != nil else { return }
         note.title = titleTextFiled.text!
@@ -45,6 +49,7 @@ class NoteDetailViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        subscribeToKeyboardNotifications()
         guard note != nil else { return }
         tagListView.removeAllTags()
         note.tags.forEach { tagListView.addTag($0.name) }
@@ -96,10 +101,37 @@ extension NoteDetailViewController: UITextViewDelegate {
     
 }
 
-extension NoteDetailViewController: UIScrollViewDelegate {
+extension NoteDetailViewController {
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        view.endEditing(true)
+    // MARK: - NoteDetailViewController (Show/Hide Keyboard)
+    
+    func subscribeToKeyboardNotifications() {
+        let center = NSNotificationCenter.defaultCenter()
+        center.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        center.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
+    
+    func unsubscribeToKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        let keyboardHeight = keyboardHeightFromNotification(notification)
 
+        // add the keyboard height to the content insets so that the scrollview can be scrolled
+        let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
+        scrollView.contentInset = contentInset
+        scrollView.scrollIndicatorInsets = contentInset
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        scrollView.contentInset = UIEdgeInsetsZero
+        scrollView.scrollIndicatorInsets = UIEdgeInsetsZero
+    }
+    
+    func keyboardHeightFromNotification(notification: NSNotification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardFrame = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        return keyboardFrame.CGRectValue().height
+    }
 }

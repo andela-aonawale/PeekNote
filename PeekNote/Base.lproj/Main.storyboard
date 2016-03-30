@@ -165,7 +165,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5CY-Yn-eCZ">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="5CY-Yn-eCZ">
                                 <rect key="frame" x="-4" y="64" width="328" height="504"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yRk-ok-t03">
@@ -336,6 +336,7 @@
                     <connections>
                         <outlet property="bodyTextView" destination="qcb-s0-RCd" id="e5M-M7-0XP"/>
                         <outlet property="dateLabel" destination="6RD-Rd-es9" id="A2b-lF-Ua5"/>
+                        <outlet property="scrollView" destination="5CY-Yn-eCZ" id="zHm-ZE-sUG"/>
                         <outlet property="tagListView" destination="Nu5-ef-yjR" id="Jpl-lt-8YD"/>
                         <outlet property="titleTextFiled" destination="1mo-fg-LBh" id="fZi-EU-bPY"/>
                     </connections>
