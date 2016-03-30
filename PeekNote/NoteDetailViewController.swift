@@ -67,10 +67,13 @@ class NoteDetailViewController: UIViewController {
     }
     
     @IBAction func showTags(sender: UIBarButtonItem) {
-        let vc = TagListViewController(style: .Plain)
-        vc.managedObjectContext = managedObjectContext
-        vc.note = note
-        let navCon = UINavigationController(rootViewController: vc)
+        let viewController = TagListViewController(style: .Plain)
+        viewController.managedObjectContext = managedObjectContext
+        viewController.note = note
+        let navCon = UINavigationController(rootViewController: viewController)
+        navCon.modalPresentationStyle = .Popover
+        let ppc = navCon.popoverPresentationController
+        ppc?.barButtonItem = navigationItem.rightBarButtonItem        
         presentViewController(navCon, animated: true, completion: nil)
     }
     
