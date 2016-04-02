@@ -11,7 +11,7 @@
     </entity>
     <entity name="Reminder" representedClassName=".Reminder" syncable="YES">
         <attribute name="date" attributeType="Date" syncable="YES"/>
-        <attribute name="repeats" attributeType="Boolean" syncable="YES"/>
+        <attribute name="repeats" attributeType="Integer 16" syncable="YES"/>
         <relationship name="note" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Note" inverseName="reminder" inverseEntity="Note" syncable="YES"/>
     </entity>
     <entity name="Tag" representedClassName=".Tag" syncable="YES">

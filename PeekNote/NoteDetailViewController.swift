@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import TagListView
 
-class NoteDetailViewController: UIViewController {
+final class NoteDetailViewController: UIViewController {
 
     var note: Note!
     var managedObjectContext: NSManagedObjectContext!
@@ -20,6 +20,7 @@ class NoteDetailViewController: UIViewController {
     @IBOutlet weak var titleTextFiled: UITextField!
     @IBOutlet weak var bodyTextView: UITextView!
     @IBOutlet weak var tagListView: TagListView!
+    @IBOutlet weak var reminderLabel: UILabel!
     @IBOutlet weak var remindButton: UIButton!
     @IBOutlet weak var deleteReminderButton: UIButton!
     
@@ -29,7 +30,7 @@ class NoteDetailViewController: UIViewController {
         bodyTextView.text = note.body
         dateLabel.text = note.creationDate.prettified
         tagListView.alignment = .Right
-        navigationItem.rightBarButtonItem?.enabled = !note.title.isEmpty || !note.body.isEmpty
+        checkIfNoteIsValid()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -49,10 +50,18 @@ class NoteDetailViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        subscribeToKeyboardNotifications()
         guard note != nil else { return }
+        subscribeToKeyboardNotifications()
         tagListView.removeAllTags()
         note.tags.forEach { tagListView.addTag($0.name) }
+        
+        guard let reminder = note.reminder else { return }
+        reminderLabel.text = String.mediumDateShortTime(reminder.date)
+        reminderLabel.text = reminderLabel.text?.stringByAppendingString("\nRepeats: \(reminder.repeats.title())")
+        reminderLabel.textColor = .lightGrayColor()
+        reminderLabel.font = .systemFontOfSize(14)
+        remindButton.setImage(UIImage(named: "Alarm Clock"), forState: .Normal)
+        deleteReminderButton.enabled = true
     }
 
     override func viewDidLoad() {
@@ -73,25 +82,41 @@ class NoteDetailViewController: UIViewController {
         let navCon = UINavigationController(rootViewController: viewController)
         navCon.modalPresentationStyle = .Popover
         let ppc = navCon.popoverPresentationController
-        ppc?.barButtonItem = navigationItem.rightBarButtonItem        
+        ppc?.barButtonItem = navigationItem.rightBarButtonItem
         presentViewController(navCon, animated: true, completion: nil)
     }
     
-    @IBAction func addReminder(sender: UIButton) {
-        // TODO: add reminder to note
+    @IBAction func addReminder(sender: UITapGestureRecognizer) {
+        let viewController = AddReminderViewController()
+        viewController.note = note
+        viewController.managedObjectContext = managedObjectContext
+        let navCon = UINavigationController(rootViewController: viewController)
+        presentViewController(navCon, animated: true) {
+            let settings = UIUserNotificationSettings( forTypes: [.Alert, .Sound, .Badge], categories: nil)
+            UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        }
     }
     
     @IBAction func deleteReminder(sender: UIButton) {
-        // TODO: delete reminder from note
+        guard let reminder = note.reminder else { return }
+        managedObjectContext.deleteObject(reminder)
+        reminderLabel.text = "Remind me"
+        reminderLabel.font = .systemFontOfSize(17)
+        reminderLabel.textColor = .secondaryColor()
+        remindButton.setImage(UIImage(named: "Reminder"), forState: .Normal)
+        sender.enabled = false
     }
     
     @IBAction func textDidChange(sender: UITextField) {
-        canAddTagToNote()
+        checkIfNoteIsValid()
     }
     
-    func canAddTagToNote() -> Bool {
-        navigationItem.rightBarButtonItem?.enabled = !titleTextFiled.text!.isEmpty || !bodyTextView.text.isEmpty
-        return true
+    func checkIfNoteIsValid() {
+        let enable = !titleTextFiled.text!.isEmpty || !bodyTextView.text.isEmpty
+        navigationItem.rightBarButtonItem?.enabled = enable
+        reminderLabel.userInteractionEnabled = enable
+        reminderLabel.textColor = enable ? .secondaryColor() : .lightGrayColor()
+        remindButton.enabled = enable
     }
 
 }
@@ -99,7 +124,7 @@ class NoteDetailViewController: UIViewController {
 extension NoteDetailViewController: UITextViewDelegate {
     
     func textViewDidChange(textView: UITextView) {
-        canAddTagToNote()
+        checkIfNoteIsValid()
     }
     
 }

@@ -81,7 +81,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lv5-ZT-etB">
                                         <rect key="frame" x="16" y="50.5" width="256" height="0.0"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -189,22 +189,24 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFit" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="phL-RJ-uOb">
-                                                        <rect key="frame" x="8" y="26" width="97" height="26"/>
-                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Italic" family="Helvetica Neue" pointSize="14"/>
-                                                        <state key="normal" title="Remind me" image="Reminder">
-                                                            <color key="titleColor" red="0.98431372549019602" green="0.73725490196078436" blue="0.019607843137254902" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </state>
+                                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFit" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="phL-RJ-uOb">
+                                                        <rect key="frame" x="8" y="26" width="25" height="26"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="lbD-UA-K63"/>
+                                                        </constraints>
+                                                        <state key="normal" image="Reminder"/>
+                                                        <variation key="default">
+                                                            <mask key="constraints">
+                                                                <exclude reference="lbD-UA-K63"/>
+                                                            </mask>
+                                                        </variation>
                                                         <connections>
                                                             <action selector="addReminder:" destination="JEX-9P-axG" eventType="touchUpInside" id="RoR-or-JZB"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="buD-RP-WLM">
+                                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFit" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="buD-RP-WLM">
                                                         <rect key="frame" x="279" y="26" width="25" height="25"/>
-                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Italic" family="Helvetica Neue" pointSize="14"/>
-                                                        <state key="normal" image="Cancel">
-                                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </state>
+                                                        <state key="normal" image="Cancel"/>
                                                         <connections>
                                                             <action selector="deleteReminder:" destination="JEX-9P-axG" eventType="touchUpInside" id="xr2-U7-X8J"/>
                                                         </connections>
@@ -227,15 +229,29 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
+                                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="Remind me" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eh9-Tm-6dW">
+                                                        <rect key="frame" x="41" y="28" width="230" height="21"/>
+                                                        <gestureRecognizers/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" red="1" green="0.73333333333333328" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="9hQ-mh-6DE" appends="YES" id="BOs-Ut-v03"/>
+                                                        </connections>
+                                                    </label>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="HwP-hC-Ws5" firstAttribute="leading" secondItem="ycM-UE-5JR" secondAttribute="leading" constant="8" id="AGu-QB-T5X"/>
+                                                    <constraint firstItem="eh9-Tm-6dW" firstAttribute="leading" secondItem="phL-RJ-uOb" secondAttribute="trailing" constant="8" id="BDS-ni-Gfm"/>
                                                     <constraint firstItem="phL-RJ-uOb" firstAttribute="leading" secondItem="ycM-UE-5JR" secondAttribute="leading" constant="8" id="F2H-GU-rB2"/>
+                                                    <constraint firstItem="eh9-Tm-6dW" firstAttribute="baseline" secondItem="phL-RJ-uOb" secondAttribute="baseline" id="LXq-XB-OT7"/>
                                                     <constraint firstAttribute="trailing" secondItem="buD-RP-WLM" secondAttribute="trailing" constant="8" id="QcO-vE-6zJ"/>
                                                     <constraint firstAttribute="bottom" secondItem="Nu5-ef-yjR" secondAttribute="bottom" constant="8" id="TOL-KK-bZu"/>
                                                     <constraint firstAttribute="trailing" secondItem="Nu5-ef-yjR" secondAttribute="trailing" constant="8" id="Ure-NI-4tC"/>
                                                     <constraint firstItem="buD-RP-WLM" firstAttribute="top" secondItem="HwP-hC-Ws5" secondAttribute="bottom" constant="8" id="ZeF-v7-xZ1"/>
                                                     <constraint firstAttribute="trailing" secondItem="HwP-hC-Ws5" secondAttribute="trailing" constant="8" id="aSO-BU-EEm"/>
+                                                    <constraint firstItem="buD-RP-WLM" firstAttribute="leading" secondItem="eh9-Tm-6dW" secondAttribute="trailing" constant="8" id="jCh-6n-mEX"/>
+                                                    <constraint firstItem="eh9-Tm-6dW" firstAttribute="centerY" secondItem="phL-RJ-uOb" secondAttribute="centerY" id="k9r-XY-8Po"/>
                                                     <constraint firstItem="Nu5-ef-yjR" firstAttribute="leading" secondItem="ycM-UE-5JR" secondAttribute="leading" constant="8" id="lbu-tp-6uq"/>
                                                     <constraint firstItem="HwP-hC-Ws5" firstAttribute="top" secondItem="ycM-UE-5JR" secondAttribute="top" constant="8" id="ncr-Nx-Ehr"/>
                                                     <constraint firstItem="phL-RJ-uOb" firstAttribute="top" secondItem="HwP-hC-Ws5" secondAttribute="bottom" constant="8" id="oKm-9V-vei"/>
@@ -246,6 +262,7 @@
                                                 <variation key="default">
                                                     <mask key="constraints">
                                                         <exclude reference="vEd-Kx-Lam"/>
+                                                        <exclude reference="LXq-XB-OT7"/>
                                                         <exclude reference="ZeF-v7-xZ1"/>
                                                     </mask>
                                                 </variation>
@@ -336,12 +353,20 @@
                     <connections>
                         <outlet property="bodyTextView" destination="qcb-s0-RCd" id="e5M-M7-0XP"/>
                         <outlet property="dateLabel" destination="6RD-Rd-es9" id="A2b-lF-Ua5"/>
+                        <outlet property="deleteReminderButton" destination="buD-RP-WLM" id="ofA-Kj-n8q"/>
+                        <outlet property="remindButton" destination="phL-RJ-uOb" id="g81-eS-kba"/>
+                        <outlet property="reminderLabel" destination="eh9-Tm-6dW" id="zze-ZB-fpe"/>
                         <outlet property="scrollView" destination="5CY-Yn-eCZ" id="zHm-ZE-sUG"/>
                         <outlet property="tagListView" destination="Nu5-ef-yjR" id="Jpl-lt-8YD"/>
                         <outlet property="titleTextFiled" destination="1mo-fg-LBh" id="fZi-EU-bPY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FJe-Yq-33r" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="9hQ-mh-6DE">
+                    <connections>
+                        <action selector="addReminder:" destination="JEX-9P-axG" id="7qo-Wx-u97"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="441" y="129"/>
         </scene>
@@ -385,7 +410,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="body" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UWA-3v-Tpl">
                                             <rect key="frame" x="8" y="35" width="304" height="20"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="11/02/2016" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sIW-dh-rEW">

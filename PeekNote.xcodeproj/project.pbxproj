@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3B8A0D4DA40BF7DDC286F0A8 /* Pods_PeekNote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A8159C1A804FD9C42B442FC /* Pods_PeekNote.framework */; };
+		85134DEF1CACB8A300B1C81B /* AddReminderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85134DEE1CACB8A300B1C81B /* AddReminderViewController.swift */; };
 		855E40C31CA354A20029F5E9 /* RelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855E40C21CA354A20029F5E9 /* RelativeDateFormatter.swift */; };
 		855E40C51CA354C60029F5E9 /* PersistenceStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855E40C41CA354C60029F5E9 /* PersistenceStack.swift */; };
 		8573383A1CA4AFF6007738E6 /* TagListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857338391CA4AFF6007738E6 /* TagListViewController.swift */; };
@@ -54,6 +55,7 @@
 
 /* Begin PBXFileReference section */
 		1A8159C1A804FD9C42B442FC /* Pods_PeekNote.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PeekNote.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		85134DEE1CACB8A300B1C81B /* AddReminderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddReminderViewController.swift; sourceTree = "<group>"; };
 		855E40C21CA354A20029F5E9 /* RelativeDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelativeDateFormatter.swift; sourceTree = "<group>"; };
 		855E40C41CA354C60029F5E9 /* PersistenceStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceStack.swift; sourceTree = "<group>"; };
 		857338391CA4AFF6007738E6 /* TagListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListViewController.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 				857338391CA4AFF6007738E6 /* TagListViewController.swift */,
 				85754A981CA770050023DFAF /* NotePreviewViewController.swift */,
 				85754A9A1CA890640023DFAF /* SideMenuViewController.swift */,
+				85134DEE1CACB8A300B1C81B /* AddReminderViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -458,6 +461,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85134DEF1CACB8A300B1C81B /* AddReminderViewController.swift in Sources */,
 				85754A971CA74B4A0023DFAF /* TagCellHeader.swift in Sources */,
 				857338471CA4E1CA007738E6 /* Tag.swift in Sources */,
 				85F084321C9F1B48004CE692 /* Extension.swift in Sources */,

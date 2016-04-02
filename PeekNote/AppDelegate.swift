@@ -35,9 +35,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // application wide customization
         UINavigationBar.appearance().barStyle = UIBarStyle.Black
         UINavigationBar.appearance().translucent = false
-        UINavigationBar.appearance().barTintColor = UIColor(red:0.90, green:0.69, blue:0.21, alpha:1.00)
-        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
-        window?.tintColor = UIColor(red:0.90, green:0.69, blue:0.21, alpha:1.00)
+        UINavigationBar.appearance().barTintColor = .secondaryColor()
+        UINavigationBar.appearance().tintColor = .primaryColor()
+        window?.tintColor = .secondaryColor()
         
         // set SWRevealViewController as rootviewcontroller
         let revealViewController = SWRevealViewController(rearViewController: rearNavController, frontViewController: splitViewController)

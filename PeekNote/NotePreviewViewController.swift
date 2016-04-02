@@ -9,7 +9,7 @@
 import UIKit
 import TagListView
 
-class NotePreviewViewController: UIViewController {
+final class NotePreviewViewController: UIViewController {
     
     var note: Note!
     

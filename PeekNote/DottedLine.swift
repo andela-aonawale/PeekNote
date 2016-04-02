@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-@IBDesignable class DottedLine: UIView {
+@IBDesignable final class DottedLine: UIView {
     
     @IBInspectable var lineWidth: CGFloat = 0
     @IBInspectable var lineColor: UIColor = UIColor.blackColor()

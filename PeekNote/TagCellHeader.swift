@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TagCellHeader: UIView {
+final class TagCellHeader: UIView {
     
     @IBOutlet weak var textLabel: UILabel!
 

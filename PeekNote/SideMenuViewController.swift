@@ -12,19 +12,23 @@ import SWRevealViewController
 
 private let reuseIdentifier = "Sidebar Cell"
 
-class SideMenuViewController: UITableViewController {
+final class SideMenuViewController: UITableViewController {
 
-    var tags: [Tag]?
+    var tags: [Tag]!
     var currentIndexPath: NSIndexPath!
     var managedObjectContext: NSManagedObjectContext!
     
     // Mark: - Fetched Request
     
-    func fetchAllTags() -> [Tag]? {
+    func fetchAllTags() -> [Tag] {
         let fetchRequest = NSFetchRequest(entityName: "Tag")
         let nameSortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         fetchRequest.sortDescriptors = [nameSortDescriptor]
-        return try? managedObjectContext.executeFetchRequest(fetchRequest) as! [Tag]
+        do {
+            return try managedObjectContext.executeFetchRequest(fetchRequest) as! [Tag]
+        } catch {
+            return []
+        }
     }
     
     override func viewDidLoad() {
@@ -37,23 +41,25 @@ class SideMenuViewController: UITableViewController {
     }
     
     func editTags(sender: UIBarButtonItem) {
-        if !tableView.editing {
-            editButtonItem().title = "Done"
-            editButtonItem().style = .Done
-            revealViewController().setFrontViewPosition(.RightMost, animated: true)
-        } else {
+        if tableView.editing {
             editButtonItem().title = "Edit"
             editButtonItem().style = .Plain
             revealViewController().setFrontViewPosition(.Right, animated: true)
+        } else {
+            editButtonItem().title = "Done"
+            editButtonItem().style = .Done
+            revealViewController().setFrontViewPosition(.RightMost, animated: true)
         }
         tableView.setEditing(!tableView.editing, animated: true)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        guard managedObjectContext.hasChanges else { return }
-        tags = fetchAllTags()
-        tableView.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
+        if managedObjectContext.hasChanges {
+            tags = fetchAllTags()
+            tableView.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
+        }
+        editButtonItem().enabled = !tags.isEmpty
     }
 
     override func didReceiveMemoryWarning() {
@@ -71,7 +77,7 @@ class SideMenuViewController: UITableViewController {
         case 0, 2:
             return 2
         default:
-            return tags?.count ?? 0
+            return tags.count
         }
     }
 
@@ -90,7 +96,7 @@ class SideMenuViewController: UITableViewController {
             cell.textLabel?.text = "Trash"
             cell.imageView?.image = UIImage(named: "Trash")
         } else {
-            cell.textLabel?.text = tags?[indexPath.row].name
+            cell.textLabel?.text = tags[indexPath.row].name
             cell.imageView?.image = UIImage(named: "Tag")
         }
         return cell
@@ -119,7 +125,7 @@ class SideMenuViewController: UITableViewController {
             predicate = NSPredicate(format: "reminder != nil")
         case let (section, row) where section == 1:
             title = "Notes"
-            predicate = NSPredicate(format: "tags contains[c] %@", tags![row])
+            predicate = NSPredicate(format: "tags contains[c] %@", tags[row])
         case let (section, row) where section == 2 && row == 0:
             title = "Archive"
             predicate = NSPredicate(format: "state == \(State.Archived.rawValue)")
@@ -152,9 +158,9 @@ class SideMenuViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        let tag = tags![indexPath.row]
+        let tag = tags[indexPath.row]
         managedObjectContext.deleteObject(tag)
-        tags?.removeAtIndex(indexPath.row)
+        tags.removeAtIndex(indexPath.row)
         tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
 

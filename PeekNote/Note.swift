@@ -15,7 +15,7 @@ import CoreData
     case Trashed
 }
 
-class Note: NSManagedObject {
+final class Note: NSManagedObject {
     
     @NSManaged var tags: Set<Tag>
     @NSManaged var state: State

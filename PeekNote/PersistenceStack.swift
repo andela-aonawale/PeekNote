@@ -11,7 +11,7 @@ import CoreData
 
 private let SQLITE_FILE_NAME = "PeekNote.sqlite"
 
-class PersistenceStack {
+final class PersistenceStack {
     
     private static let sharedInstance = PersistenceStack()
     

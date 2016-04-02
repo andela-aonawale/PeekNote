@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class Tag: NSManagedObject {
+final class Tag: NSManagedObject {
     
     @NSManaged var name: String
     @NSManaged var notes: Set<Note>

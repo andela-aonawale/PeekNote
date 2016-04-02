@@ -11,7 +11,7 @@ import CoreData
 
 private let reuseIdentifier = "Tag Cell"
 
-class TagListViewController: UITableViewController {
+final class TagListViewController: UITableViewController {
     
     var note: Note!
     let searchBar = UISearchBar()
@@ -23,7 +23,7 @@ class TagListViewController: UITableViewController {
     
     // Mark: - Fetched Results Controller
     
-    lazy var fetchedResultsController: NSFetchedResultsController = {
+    lazy var fetchedResultsController: NSFetchedResultsController = { [unowned self] in
         let fetchRequest = NSFetchRequest(entityName: "Tag")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
@@ -33,7 +33,7 @@ class TagListViewController: UITableViewController {
         return fetchedResultsController
     }()
     
-    func dismiss() {
+    override func dismiss() {
         searchBar.resignFirstResponder()
         dismissViewControllerAnimated(true, completion: nil)
     }
@@ -48,14 +48,9 @@ class TagListViewController: UITableViewController {
     }
     
     func setTableViewHeaderHidden(hidden: Bool) {
-        if hidden {
-            UIView.animateWithDuration(0.2) {
-                self.tableView.contentInset = UIEdgeInsets(top: -50, left: 0, bottom: 0, right: 0)
-            }
-        } else {
-            UIView.animateWithDuration(0.2) {
-                self.tableView.contentInset = UIEdgeInsetsZero
-            }
+        UIView.animateWithDuration(0.2) { [weak self] in
+            guard let `self` = self else { return }
+            self.tableView.contentInset.top = hidden ? -50 : 0
         }
     }
     
@@ -63,7 +58,7 @@ class TagListViewController: UITableViewController {
         headerView = nib.instantiateWithOwner(nil, options: nil)[0] as! TagCellHeader
         let gesture = UITapGestureRecognizer(target: self, action: #selector(addTag))
         headerView.addGestureRecognizer(gesture)
-        tableView.contentInset = UIEdgeInsets(top: -50, left: 0, bottom: 0, right: 0)
+        tableView.contentInset.top = -50
     }
 
     override func viewDidLoad() {

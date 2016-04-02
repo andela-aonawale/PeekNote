@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import UIKit
 
-class FilterableFRCDataSource: UITableViewFRCDataSource {
+final class FilterableFRCDataSource: UITableViewFRCDataSource {
     
     var filteredObjects = [NSManagedObject]()
     var searchBar: UISearchBar!

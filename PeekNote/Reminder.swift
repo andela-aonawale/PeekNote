@@ -8,18 +8,29 @@
 
 import Foundation
 import CoreData
+import UIKit
 
-class Reminder: NSManagedObject {
+final class Reminder: NSManagedObject {
     
     @NSManaged var date: NSDate
-    @NSManaged var repeats: Bool
+    @NSManaged var repeats: Repeat
     @NSManaged var note: Note?
     
-    convenience init(date: NSDate, repeats: Bool, insertIntoManagedObjectContext context: NSManagedObjectContext) {
+    convenience init(date: NSDate, repeats: Repeat, insertIntoManagedObjectContext context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName("Reminder", inManagedObjectContext: context)!
         self.init(entity: entity, insertIntoManagedObjectContext: context)
         self.date = date
         self.repeats = repeats
+        self.scheduleNotification()
+    }
+    
+    func scheduleNotification() {
+        UILocalNotification.scheduleNotificationForReminder(self)
+    }
+    
+    override func prepareForDeletion() {
+        super.prepareForDeletion()
+        UILocalNotification.cancelNotificationForReminder(self)
     }
     
 }

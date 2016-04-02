@@ -14,7 +14,7 @@ import MCSwipeTableViewCell
 
 private let cacheName = "NotesCache"
 
-class NotesViewController: UITableViewController {
+final class NotesViewController: UITableViewController {
     
     var peekPop: PeekPop?
     var peekLocation: CGPoint?
@@ -31,7 +31,7 @@ class NotesViewController: UITableViewController {
         
     // Mark: - Fetched Results Controller
     
-    lazy var fetchedResultsController: NSFetchedResultsController = {
+    lazy var fetchedResultsController: NSFetchedResultsController = { [unowned self] in
         let fetchRequest = NSFetchRequest(entityName: "Note")
         fetchRequest.predicate = self.fetchPredicate
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "updatedDate", ascending: false)]
@@ -153,30 +153,6 @@ extension NotesViewController: PeekPopPreviewingDelegate {
 
 extension NotesViewController: UITableViewFRCDataSourceDelegate {
     
-    func viewWithImageNamed(name: String, labelName: String) -> UIView {
-        let image = UIImageView(image: UIImage(named: name))
-        image.contentMode = .Center
-        image.translatesAutoresizingMaskIntoConstraints = false
-        
-        let label = UILabel()
-        label.text = labelName
-        label.textColor = .whiteColor()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        let view = UIView()
-        view.addSubview(image)
-        view.addSubview(label)
-        
-        let c1 = NSLayoutConstraint(item: label, attribute: .CenterX, relatedBy: .Equal, toItem: view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let c2 = NSLayoutConstraint(item: label, attribute: .CenterY, relatedBy: .Equal, toItem: view, attribute: .CenterY, multiplier: 1, constant: 20)
-        
-        let c3 = NSLayoutConstraint(item: image, attribute: .CenterX, relatedBy: .Equal, toItem: view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let c4 = NSLayoutConstraint(item: image, attribute: .CenterY, relatedBy: .Equal, toItem: view, attribute: .CenterY, multiplier: 1, constant: -10)
-        
-        view.addConstraints([c1, c2, c3, c4])
-        return view
-    }
-    
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath, withObject object: NSManagedObject) {
         guard let cell = cell as? NoteTableViewCell else { return }
         guard let note = object as? Note else { return }
@@ -197,20 +173,20 @@ extension NotesViewController: UITableViewFRCDataSourceDelegate {
         
         switch state {
         case .Normal:
-            firstView = viewWithImageNamed("Archive Filled", labelName: "Archive")
-            secondView = viewWithImageNamed("Trash Filled", labelName: "Trash")
-            firstColor = UIColor(red: 0.29, green: 0.31, blue: 0.33, alpha: 1.00)
-            secondColor = UIColor(red:0.90, green: 0.23, blue: 0.05, alpha: 1.00)
+            firstView = UIView.viewWithImageNamed("Archive Filled", labelName: "Archive")
+            secondView = UIView.viewWithImageNamed("Trash Filled", labelName: "Trash")
+            firstColor = .trashColor()
+            secondColor = .deleteColor()
         case .Archived:
-            firstView = viewWithImageNamed("Delete Archive Filled", labelName: "Unarchive")
-            secondView = viewWithImageNamed("Trash Filled", labelName: "Trash")
-            firstColor = UIColor(red: 0.29, green: 0.31, blue: 0.33, alpha: 1.00)
-            secondColor = UIColor(red:0.90, green: 0.23, blue: 0.05, alpha: 1.00)
+            firstView = UIView.viewWithImageNamed("Delete Archive Filled", labelName: "Unarchive")
+            secondView = UIView.viewWithImageNamed("Trash Filled", labelName: "Trash")
+            firstColor = .trashColor()
+            secondColor = .deleteColor()
         case .Trashed:
-            firstView = viewWithImageNamed("Recover Trash", labelName: "Recover")
-            secondView = viewWithImageNamed("Delete Filled", labelName: "Delete")
-            firstColor = UIColor(red: 0.29, green: 0.31, blue: 0.33, alpha: 1.00)
-            secondColor = UIColor(red:0.90, green: 0.23, blue: 0.05, alpha: 1.00)
+            firstView = UIView.viewWithImageNamed("Recover Trash", labelName: "Recover")
+            secondView = UIView.viewWithImageNamed("Delete Filled", labelName: "Delete")
+            firstColor = .trashColor()
+            secondColor = .deleteColor()
         }
         
         return (firstView, secondView, firstColor, secondColor)
@@ -218,10 +194,12 @@ extension NotesViewController: UITableViewFRCDataSourceDelegate {
     
     func customizeCell(cell: MCSwipeTableViewCell, forState noteState: State) {
         let style = cellStyleForState(noteState)
-        cell.setSwipeGestureWithView(style.firstView, color: style.firstColor, mode: .Exit, state: .State3) { cell, state, mode in
+        cell.setSwipeGestureWithView(style.firstView, color: style.firstColor, mode: .Exit, state: .State3) { [weak self] cell, state, _ in
+            guard let `self` = self else { return }
             self.commitCell(cell, toState: state, withNoteState: noteState)
         }
-        cell.setSwipeGestureWithView(style.secondView, color: style.secondColor, mode: .Exit, state: .State4) { cell, state, mode in
+        cell.setSwipeGestureWithView(style.secondView, color: style.secondColor, mode: .Exit, state: .State4) { [weak self] cell, state, _ in
+            guard let `self` = self else { return }
             self.commitCell(cell, toState: state, withNoteState: noteState)
         }
     }
@@ -236,7 +214,19 @@ extension NotesViewController: UITableViewFRCDataSourceDelegate {
         case .Archived:
             state == .State3 ? (note.state = .Normal) : (note.state = .Trashed)
         case .Trashed:
-            state == .State3 ? (note.state = .Normal) : managedObjectContext.deleteObject(note)
+            state == .State3 ? (note.state = .Normal) : {
+                let alert = UIAlertController(title: nil, message: "Are you sure you want to delete this note", preferredStyle: .Alert)
+                let deleteAction = UIAlertAction(title: "Delete", style: .Default) { [weak self] _ in
+                    guard let `self` = self else { return }
+                    self.managedObjectContext.deleteObject(note)
+                }
+                let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in
+                    cell.swipeToOriginWithCompletion(nil)
+                }
+                alert.addAction(deleteAction)
+                alert.addAction(cancelAction)
+                presentViewController(alert, animated: true, completion: nil)
+            }()
         }
     }
     
