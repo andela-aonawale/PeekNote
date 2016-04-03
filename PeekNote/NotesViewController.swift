@@ -119,8 +119,8 @@ extension NotesViewController: UISplitViewControllerDelegate {
     // MARK: - Split view
     
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
-        guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
-        guard let viewController = secondaryAsNavController.topViewController as? NoteDetailViewController else { return false }
+        guard let secondaryAsNavController = secondaryViewController as? UINavigationController,
+        viewController = secondaryAsNavController.topViewController as? NoteDetailViewController else { return false }
         // Return true to indicate that we have handled the collapse by doing nothing;
         //the secondary controller will be discarded.
         return viewController.note == nil
@@ -131,10 +131,8 @@ extension NotesViewController: UISplitViewControllerDelegate {
 extension NotesViewController: PeekPopPreviewingDelegate {
     
     func previewingContext(previewingContext: PreviewingContext, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let vc = storyboard?.instantiateViewControllerWithIdentifier("NotePreviewViewController") as? NotePreviewViewController else {
-            return nil
-        }
-        guard let indexPath = tableView.indexPathForRowAtPoint(location) else { return nil }
+        guard let vc = storyboard?.instantiateViewControllerWithIdentifier("NotePreviewViewController") as? NotePreviewViewController,
+        indexPath = tableView.indexPathForRowAtPoint(location) else { return nil }
         peekLocation = location
         navigationController?.setNavigationBarHidden(true, animated: true)
         previewingContext.sourceRect = tableView.rectForRowAtIndexPath(indexPath)
@@ -154,8 +152,8 @@ extension NotesViewController: PeekPopPreviewingDelegate {
 extension NotesViewController: UITableViewFRCDataSourceDelegate {
     
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath, withObject object: NSManagedObject) {
-        guard let cell = cell as? NoteTableViewCell else { return }
-        guard let note = object as? Note else { return }
+        guard let cell = cell as? NoteTableViewCell,
+        note = object as? Note else { return }
         cell.note = note
         cell.firstTrigger = 0.4
         cell.secondTrigger = 0.6
@@ -195,12 +193,10 @@ extension NotesViewController: UITableViewFRCDataSourceDelegate {
     func customizeCell(cell: MCSwipeTableViewCell, forState noteState: State) {
         let style = cellStyleForState(noteState)
         cell.setSwipeGestureWithView(style.firstView, color: style.firstColor, mode: .Exit, state: .State3) { [weak self] cell, state, _ in
-            guard let `self` = self else { return }
-            self.commitCell(cell, toState: state, withNoteState: noteState)
+            self?.commitCell(cell, toState: state, withNoteState: noteState)
         }
         cell.setSwipeGestureWithView(style.secondView, color: style.secondColor, mode: .Exit, state: .State4) { [weak self] cell, state, _ in
-            guard let `self` = self else { return }
-            self.commitCell(cell, toState: state, withNoteState: noteState)
+            self?.commitCell(cell, toState: state, withNoteState: noteState)
         }
     }
     
@@ -217,8 +213,7 @@ extension NotesViewController: UITableViewFRCDataSourceDelegate {
             state == .State3 ? (note.state = .Normal) : {
                 let alert = UIAlertController(title: nil, message: "Are you sure you want to delete this note", preferredStyle: .Alert)
                 let deleteAction = UIAlertAction(title: "Delete", style: .Default) { [weak self] _ in
-                    guard let `self` = self else { return }
-                    self.managedObjectContext.deleteObject(note)
+                    self?.managedObjectContext.deleteObject(note)
                 }
                 let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in
                     cell.swipeToOriginWithCompletion(nil)
