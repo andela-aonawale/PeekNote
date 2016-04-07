@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-@objc enum State: Int32 {
+@objc enum State: Int16 {
     case Normal
     case Archived
     case Trashed
@@ -26,17 +26,17 @@ final class Note: NSManagedObject {
     @NSManaged var creationDate: NSDate
     
     convenience init(title: String, body: String, insertIntoManagedObjectContext context: NSManagedObjectContext) {
-        let entity = NSEntityDescription.entityForName("Note", inManagedObjectContext: context)!
+        let entity = NSEntityDescription.entityForName(Note.entityName(), inManagedObjectContext: context)!
         self.init(entity: entity, insertIntoManagedObjectContext: context)
         self.title = title
         self.body = body
+        self.state = .Normal
     }
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
         setPrimitiveValue(NSDate(), forKey: "creationDate")
         setPrimitiveValue(NSDate(), forKey: "updatedDate")
-        state = .Normal
     }
     
 }

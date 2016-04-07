@@ -19,7 +19,7 @@
 		85754A971CA74B4A0023DFAF /* TagCellHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A961CA74B4A0023DFAF /* TagCellHeader.swift */; };
 		85754A991CA770050023DFAF /* NotePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A981CA770050023DFAF /* NotePreviewViewController.swift */; };
 		85754A9B1CA890640023DFAF /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A9A1CA890640023DFAF /* SideMenuViewController.swift */; };
-		85B2BDF51CA3D8990024814D /* UICollectionViewFRCDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B2BDF41CA3D8990024814D /* UICollectionViewFRCDataSource.swift */; };
+		859B56611CB5B57B0097FF51 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 859B56601CB5B57B0097FF51 /* CloudKit.framework */; };
 		85F083B51C9EF78E004CE692 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083B41C9EF78E004CE692 /* AppDelegate.swift */; };
 		85F083B71C9EF78E004CE692 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083B61C9EF78E004CE692 /* NotesViewController.swift */; };
 		85F083B91C9EF78E004CE692 /* NoteDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083B81C9EF78E004CE692 /* NoteDetailViewController.swift */; };
@@ -66,7 +66,8 @@
 		85754A961CA74B4A0023DFAF /* TagCellHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCellHeader.swift; sourceTree = "<group>"; };
 		85754A981CA770050023DFAF /* NotePreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotePreviewViewController.swift; sourceTree = "<group>"; };
 		85754A9A1CA890640023DFAF /* SideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
-		85B2BDF41CA3D8990024814D /* UICollectionViewFRCDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewFRCDataSource.swift; sourceTree = "<group>"; };
+		859B56601CB5B57B0097FF51 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		859B56621CB5B8B60097FF51 /* PeekNote.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PeekNote.entitlements; sourceTree = "<group>"; };
 		85F083B11C9EF78E004CE692 /* PeekNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PeekNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85F083B41C9EF78E004CE692 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		85F083B61C9EF78E004CE692 /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
@@ -97,6 +98,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B8A0D4DA40BF7DDC286F0A8 /* Pods_PeekNote.framework in Frameworks */,
+				859B56611CB5B57B0097FF51 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +131,7 @@
 		3AB9007B5BB1A7F9D733B8F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				859B56601CB5B57B0097FF51 /* CloudKit.framework */,
 				1A8159C1A804FD9C42B442FC /* Pods_PeekNote.framework */,
 			);
 			name = Frameworks;
@@ -203,6 +206,7 @@
 		85F083B31C9EF78E004CE692 /* PeekNote */ = {
 			isa = PBXGroup;
 			children = (
+				859B56621CB5B8B60097FF51 /* PeekNote.entitlements */,
 				8573384A1CA4E3DF007738E6 /* Library */,
 				8573383B1CA4CDB6007738E6 /* Storyboards */,
 				85F084331C9F5CF7004CE692 /* Views */,
@@ -263,7 +267,6 @@
 				855E40C41CA354C60029F5E9 /* PersistenceStack.swift */,
 				855E40C21CA354A20029F5E9 /* RelativeDateFormatter.swift */,
 				85F0842F1C9F1599004CE692 /* UITableViewFRCDataSource.swift */,
-				85B2BDF41CA3D8990024814D /* UICollectionViewFRCDataSource.swift */,
 				85754A901CA6C41B0023DFAF /* FilterableFRCDataSource.swift */,
 			);
 			name = Helpers;
@@ -349,6 +352,12 @@
 				TargetAttributes = {
 					85F083B01C9EF78E004CE692 = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = 85WVA6M8B6;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 					85F083C61C9EF78F004CE692 = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -473,7 +482,6 @@
 				85F084351C9F5D54004CE692 /* NoteTableViewCell.swift in Sources */,
 				85F084301C9F1599004CE692 /* UITableViewFRCDataSource.swift in Sources */,
 				85754A461CA5A1A20023DFAF /* DottedLine.swift in Sources */,
-				85B2BDF51CA3D8990024814D /* UICollectionViewFRCDataSource.swift in Sources */,
 				855E40C51CA354C60029F5E9 /* PersistenceStack.swift in Sources */,
 				85F083B91C9EF78E004CE692 /* NoteDetailViewController.swift in Sources */,
 				85F083B71C9EF78E004CE692 /* NotesViewController.swift in Sources */,
@@ -623,11 +631,15 @@
 			baseConfigurationReference = D071E1131B8CC1FA6780B648 /* Pods-PeekNote.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PeekNote/PeekNote.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = PeekNote/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahmedonawale.PeekNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -636,11 +648,15 @@
 			baseConfigurationReference = B59871193A656AED416F7439 /* Pods-PeekNote.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PeekNote/PeekNote.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = PeekNote/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahmedonawale.PeekNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

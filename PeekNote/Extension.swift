@@ -8,6 +8,23 @@
 
 import Foundation
 import UIKit
+import CoreData
+
+extension NSManagedObjectContext {
+    func saveChanges() {
+        do {
+            try save()
+        } catch {}
+    }
+}
+
+extension NSManagedObject {
+    class func entityName() -> String {
+        let fullClassName = NSStringFromClass(object_getClass(self))
+        let nameComponents = fullClassName.characters.split { $0 == "." }.map {String($0)}
+        return nameComponents.last!
+    }
+}
 
 extension UILocalNotification {
     
@@ -57,7 +74,9 @@ extension NSDate {
     class var nextHourDate: NSDate {
         let calendar = NSCalendar.currentCalendar()
         let currentHour = calendar.component(.Hour, fromDate: NSDate())
-        return calendar.dateBySettingUnit(.Hour, value: currentHour.incrementBy(1), ofDate: NSDate(), options: .MatchFirst)!
+        let nextHourValue = currentHour.incrementBy(1)
+        let value = nextHourValue > 23 ? 0 : nextHourValue
+        return calendar.dateBySettingUnit(.Hour, value: value, ofDate: NSDate(), options: .MatchFirst)!
     }
     
 }
@@ -197,10 +216,4 @@ extension UIViewController {
         presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
-}
-
-extension NSString {
-    var isEmpty: Bool {
-        return self.length == 0
-    }
 }

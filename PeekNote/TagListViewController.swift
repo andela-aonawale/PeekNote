@@ -24,7 +24,7 @@ final class TagListViewController: UITableViewController {
     // Mark: - Fetched Results Controller
     
     lazy var fetchedResultsController: NSFetchedResultsController = { [unowned self] in
-        let fetchRequest = NSFetchRequest(entityName: "Tag")
+        let fetchRequest = NSFetchRequest(entityName: Tag.entityName())
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
             managedObjectContext: self.managedObjectContext,
@@ -49,8 +49,7 @@ final class TagListViewController: UITableViewController {
     
     func setTableViewHeaderHidden(hidden: Bool) {
         UIView.animateWithDuration(0.2) { [weak self] in
-            guard let `self` = self else { return }
-            self.tableView.contentInset.top = hidden ? -50 : 0
+            self?.tableView.contentInset.top = hidden ? -50 : 0
         }
     }
     

@@ -15,7 +15,7 @@ final class Tag: NSManagedObject {
     @NSManaged var notes: Set<Note>
     
     convenience init(name: String, insertIntoManagedObjectContext context: NSManagedObjectContext) {
-        let entity = NSEntityDescription.entityForName("Tag", inManagedObjectContext: context)!
+        let entity = NSEntityDescription.entityForName(Tag.entityName(), inManagedObjectContext: context)!
         self.init(entity: entity, insertIntoManagedObjectContext: context)
         self.name = name
     }

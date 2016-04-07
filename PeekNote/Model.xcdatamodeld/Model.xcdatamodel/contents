@@ -3,7 +3,7 @@
     <entity name="Note" representedClassName=".Note" syncable="YES">
         <attribute name="body" attributeType="String" syncable="YES"/>
         <attribute name="creationDate" attributeType="Date" syncable="YES"/>
-        <attribute name="state" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="state" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" attributeType="String" syncable="YES"/>
         <attribute name="updatedDate" attributeType="Date" syncable="YES"/>
         <relationship name="reminder" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Reminder" inverseName="note" inverseEntity="Reminder" syncable="YES"/>

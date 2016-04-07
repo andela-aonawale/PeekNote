@@ -43,6 +43,7 @@ final class NoteDetailViewController: UIViewController {
         guard note != nil else { return }
         note.title = titleTextFiled.text!
         note.body = bodyTextView.text
+        note.updatedDate = NSDate()
         if note.title.isEmpty && note.body.isEmpty {
             managedObjectContext.deleteObject(note)
         }
@@ -54,7 +55,6 @@ final class NoteDetailViewController: UIViewController {
         subscribeToKeyboardNotifications()
         tagListView.removeAllTags()
         note.tags.forEach { tagListView.addTag($0.name) }
-        
         guard let reminder = note.reminder else { return }
         reminderLabel.text = String.mediumDateShortTime(reminder.date)
         reminderLabel.text = reminderLabel.text?.stringByAppendingString("\nRepeats: \(reminder.repeats.title())")
@@ -62,6 +62,14 @@ final class NoteDetailViewController: UIViewController {
         reminderLabel.font = .systemFontOfSize(14)
         remindButton.setImage(UIImage(named: "Alarm Clock"), forState: .Normal)
         deleteReminderButton.enabled = true
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        guard note != nil else { return }
+        if note.title.isEmpty && note.body.isEmpty {
+            bodyTextView.becomeFirstResponder()
+        }
     }
 
     override func viewDidLoad() {

@@ -19,8 +19,31 @@ final class PersistenceStack {
         return sharedInstance
     }
     
+    func registerForiCloudNotifications() {
+        let center = NSNotificationCenter.defaultCenter()
+        let queue = NSOperationQueue.mainQueue()
+        let context = managedObjectContext
+        center.addObserverForName(NSPersistentStoreCoordinatorStoresWillChangeNotification, object: persistentStoreCoordinator, queue: queue) { notification in
+            print("store will Change")
+            context.performBlockAndWait() {
+                context.hasChanges ? context.saveChanges() : context.reset()
+            }
+        }
+        center.addObserverForName(NSPersistentStoreCoordinatorStoresDidChangeNotification, object: persistentStoreCoordinator, queue: queue) { notification in
+            print("store did Change")
+        }
+        center.addObserverForName(NSPersistentStoreDidImportUbiquitousContentChangesNotification, object: persistentStoreCoordinator, queue: queue) { notification in
+            print("store Did ImportUbiquitousContentChangesNotification")
+            context.performBlock() {
+                context.mergeChangesFromContextDidSaveNotification(notification)
+            }
+        }
+    }
+    
     // Prevent initialization from public scope
-    private init() {}
+    private init() {
+        registerForiCloudNotifications()
+    }
     
     // MARK: - The Core Data stack. The code has been moved, unaltered, from the AppDelegate.
     
@@ -60,13 +83,15 @@ final class PersistenceStack {
         print("Instantiating the persistentStoreCoordinator property")
         
         let coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent(SQLITE_FILE_NAME)
+        let storeURL = self.applicationDocumentsDirectory.URLByAppendingPathComponent(SQLITE_FILE_NAME)
         
-        print("sqlite path: \(url.path!)")
+        let storeOptions = [NSPersistentStoreUbiquitousContentNameKey: "iCloudPeekNoteStore"]
+        
+        print("sqlite path: \(storeURL.path!)")
         
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
-            try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+            try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: storeOptions)
         } catch {
             // Report any error we got.
             var dict = [String: AnyObject]()
@@ -78,7 +103,6 @@ final class PersistenceStack {
             // Replace this with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog("Unresolved error \(wrappedError), \(wrappedError.userInfo)")
-            abort()
         }
         
         return coordinator
@@ -91,6 +115,7 @@ final class PersistenceStack {
         var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         managedObjectContext.undoManager = NSUndoManager()
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return managedObjectContext
     }()
     
@@ -105,7 +130,6 @@ final class PersistenceStack {
                 // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nserror = error as NSError
                 NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                abort()
             }
         }
     }

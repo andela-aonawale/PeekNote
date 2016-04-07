@@ -115,7 +115,7 @@ extension UITableViewFRCDataSource: NSFetchedResultsControllerDelegate {
             tableView.reloadRowsAtIndexPaths([indexPath!], withRowAnimation: .Automatic)
         case .Move:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Automatic)
-            tableView.insertRowsAtIndexPaths([indexPath!], withRowAnimation: .Automatic)
+            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Automatic)
         }
     }
     

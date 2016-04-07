@@ -21,7 +21,7 @@ final class SideMenuViewController: UITableViewController {
     // Mark: - Fetched Request
     
     func fetchAllTags() -> [Tag] {
-        let fetchRequest = NSFetchRequest(entityName: "Tag")
+        let fetchRequest = NSFetchRequest(entityName: Tag.entityName())
         let nameSortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         fetchRequest.sortDescriptors = [nameSortDescriptor]
         do {
@@ -80,6 +80,8 @@ final class SideMenuViewController: UITableViewController {
             return tags.count
         }
     }
+    
+    // MARK: - Table view delegate
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath)
@@ -103,7 +105,8 @@ final class SideMenuViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 1 { return "Tags"}
+        if section == 1 && !tags.isEmpty { return "Tags" }
+        if section == 1 && tags.isEmpty { return nil }
         return "\n"
     }
     
@@ -124,7 +127,7 @@ final class SideMenuViewController: UITableViewController {
             title = "Reminders"
             predicate = NSPredicate(format: "reminder != nil")
         case let (section, row) where section == 1:
-            title = "Notes"
+            title = tags[row].name
             predicate = NSPredicate(format: "tags contains[c] %@", tags[row])
         case let (section, row) where section == 2 && row == 0:
             title = "Archive"

@@ -402,25 +402,25 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vDZ-jo-j9Z">
-                                            <rect key="frame" x="8" y="8" width="304" height="19.5"/>
+                                            <rect key="frame" x="16" y="8" width="288" height="19.5"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="body" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UWA-3v-Tpl">
-                                            <rect key="frame" x="8" y="35" width="304" height="20"/>
+                                            <rect key="frame" x="16" y="35" width="288" height="20"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="11/02/2016" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sIW-dh-rEW">
-                                            <rect key="frame" x="8" y="63" width="62.5" height="14.5"/>
+                                            <rect key="frame" x="16" y="63" width="62.5" height="14.5"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Tc-JE-9pc" customClass="TagListView" customModule="TagListView">
-                                            <rect key="frame" x="78.5" y="63" width="233" height="17"/>
+                                            <rect key="frame" x="86.5" y="63" width="217.5" height="17"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="color" keyPath="tagBackgroundColor">
@@ -440,20 +440,21 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="bottomMargin" secondItem="sIW-dh-rEW" secondAttribute="bottom" constant="8" id="3D7-AF-Qzi"/>
-                                        <constraint firstItem="vDZ-jo-j9Z" firstAttribute="leading" secondItem="37f-cq-3Eg" secondAttribute="leadingMargin" id="AtI-ty-73N"/>
+                                        <constraint firstItem="vDZ-jo-j9Z" firstAttribute="leading" secondItem="37f-cq-3Eg" secondAttribute="leadingMargin" constant="8" id="AtI-ty-73N"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="4Tc-JE-9pc" secondAttribute="bottom" id="CW1-HY-rt0"/>
-                                        <constraint firstItem="UWA-3v-Tpl" firstAttribute="trailing" secondItem="37f-cq-3Eg" secondAttribute="trailingMargin" id="Eeh-SH-51H"/>
+                                        <constraint firstItem="UWA-3v-Tpl" firstAttribute="trailing" secondItem="37f-cq-3Eg" secondAttribute="trailingMargin" constant="-8" id="Eeh-SH-51H"/>
                                         <constraint firstItem="4Tc-JE-9pc" firstAttribute="top" secondItem="UWA-3v-Tpl" secondAttribute="bottom" constant="8" id="G3l-8C-ylv"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="sIW-dh-rEW" secondAttribute="bottom" id="HL8-MX-mhv"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="4Tc-JE-9pc" secondAttribute="trailing" id="JNO-NR-FDt"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="4Tc-JE-9pc" secondAttribute="trailing" constant="8" id="JNO-NR-FDt"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="UWA-3v-Tpl" secondAttribute="trailing" constant="8" id="LJh-RM-L1j"/>
                                         <constraint firstItem="4Tc-JE-9pc" firstAttribute="leading" secondItem="sIW-dh-rEW" secondAttribute="trailing" constant="8" id="W77-Qq-jS6"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="sIW-dh-rEW" secondAttribute="bottom" id="WNR-QJ-syI"/>
-                                        <constraint firstItem="sIW-dh-rEW" firstAttribute="leading" secondItem="37f-cq-3Eg" secondAttribute="leadingMargin" id="Wyk-EJ-PgS"/>
+                                        <constraint firstItem="sIW-dh-rEW" firstAttribute="leading" secondItem="37f-cq-3Eg" secondAttribute="leadingMargin" constant="8" id="Wyk-EJ-PgS"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="sIW-dh-rEW" secondAttribute="trailing" id="Zwn-Kc-mEE"/>
                                         <constraint firstItem="sIW-dh-rEW" firstAttribute="top" secondItem="UWA-3v-Tpl" secondAttribute="bottom" constant="8" id="bYb-72-orG"/>
                                         <constraint firstItem="4Tc-JE-9pc" firstAttribute="leading" secondItem="sIW-dh-rEW" secondAttribute="trailing" constant="-222" id="gBk-fW-NhL"/>
-                                        <constraint firstItem="UWA-3v-Tpl" firstAttribute="leading" secondItem="37f-cq-3Eg" secondAttribute="leadingMargin" id="kYo-0I-2OF"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="vDZ-jo-j9Z" secondAttribute="trailing" id="r4v-bn-zmo"/>
+                                        <constraint firstItem="UWA-3v-Tpl" firstAttribute="leading" secondItem="37f-cq-3Eg" secondAttribute="leadingMargin" constant="8" id="kYo-0I-2OF"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="vDZ-jo-j9Z" secondAttribute="trailing" constant="8" id="r4v-bn-zmo"/>
                                         <constraint firstItem="UWA-3v-Tpl" firstAttribute="top" secondItem="vDZ-jo-j9Z" secondAttribute="bottom" constant="8" id="rdP-Yg-4f0"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="sIW-dh-rEW" secondAttribute="bottom" id="sSz-yr-4Qv"/>
                                         <constraint firstItem="vDZ-jo-j9Z" firstAttribute="top" secondItem="37f-cq-3Eg" secondAttribute="topMargin" id="xVp-nQ-4i4"/>
@@ -461,6 +462,7 @@
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">
+                                            <exclude reference="Eeh-SH-51H"/>
                                             <exclude reference="3D7-AF-Qzi"/>
                                             <exclude reference="HL8-MX-mhv"/>
                                             <exclude reference="WNR-QJ-syI"/>
