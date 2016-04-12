@@ -8,8 +8,9 @@
 
 import UIKit
 import TagListView
+import MCSwipeTableViewCell
 
-final class NoteTableViewCell: UITableViewCell {
+final class NoteTableViewCell: MCSwipeTableViewCell {
     
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var body: UILabel!

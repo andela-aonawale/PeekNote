@@ -19,6 +19,12 @@
 		85754A971CA74B4A0023DFAF /* TagCellHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A961CA74B4A0023DFAF /* TagCellHeader.swift */; };
 		85754A991CA770050023DFAF /* NotePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A981CA770050023DFAF /* NotePreviewViewController.swift */; };
 		85754A9B1CA890640023DFAF /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85754A9A1CA890640023DFAF /* SideMenuViewController.swift */; };
+		8589DB821CB806470019511F /* AppearanceProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8589DB811CB806470019511F /* AppearanceProxy.m */; };
+		8589DB861CB81F8D0019511F /* PlaceSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589DB851CB81F8D0019511F /* PlaceSearchViewController.swift */; };
+		8589DB891CB820840019511F /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 8589DB881CB820840019511F /* Reachability.m */; };
+		8589DB8B1CB821010019511F /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589DB8A1CB821010019511F /* APIClient.swift */; };
+		8589DB8E1CB83C2B0019511F /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589DB8D1CB83C2A0019511F /* Place.swift */; };
+		8589DB911CBC725D0019511F /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589DB901CBC725D0019511F /* Alert.swift */; };
 		859B56611CB5B57B0097FF51 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 859B56601CB5B57B0097FF51 /* CloudKit.framework */; };
 		85F083B51C9EF78E004CE692 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083B41C9EF78E004CE692 /* AppDelegate.swift */; };
 		85F083B71C9EF78E004CE692 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F083B61C9EF78E004CE692 /* NotesViewController.swift */; };
@@ -66,6 +72,16 @@
 		85754A961CA74B4A0023DFAF /* TagCellHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCellHeader.swift; sourceTree = "<group>"; };
 		85754A981CA770050023DFAF /* NotePreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotePreviewViewController.swift; sourceTree = "<group>"; };
 		85754A9A1CA890640023DFAF /* SideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
+		8589DB801CB806460019511F /* PeekNote-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PeekNote-Bridging-Header.h"; sourceTree = "<group>"; };
+		8589DB811CB806470019511F /* AppearanceProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppearanceProxy.m; sourceTree = "<group>"; };
+		8589DB831CB8066A0019511F /* AppearanceProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppearanceProxy.h; sourceTree = "<group>"; };
+		8589DB851CB81F8D0019511F /* PlaceSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceSearchViewController.swift; sourceTree = "<group>"; };
+		8589DB871CB820840019511F /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		8589DB881CB820840019511F /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		8589DB8A1CB821010019511F /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		8589DB8D1CB83C2A0019511F /* Place.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
+		8589DB8F1CBA51F20019511F /* Model v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model v2.xcdatamodel"; sourceTree = "<group>"; };
+		8589DB901CBC725D0019511F /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		859B56601CB5B57B0097FF51 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		859B56621CB5B8B60097FF51 /* PeekNote.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PeekNote.entitlements; sourceTree = "<group>"; };
 		85F083B11C9EF78E004CE692 /* PeekNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PeekNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +197,14 @@
 			name = Extensions;
 			sourceTree = "<group>";
 		};
+		8589DB8C1CB82FE40019511F /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				8589DB8A1CB821010019511F /* APIClient.swift */,
+			);
+			name = Store;
+			sourceTree = "<group>";
+		};
 		85F083A81C9EF78E004CE692 = {
 			isa = PBXGroup;
 			children = (
@@ -206,6 +230,7 @@
 		85F083B31C9EF78E004CE692 /* PeekNote */ = {
 			isa = PBXGroup;
 			children = (
+				8589DB8C1CB82FE40019511F /* Store */,
 				859B56621CB5B8B60097FF51 /* PeekNote.entitlements */,
 				8573384A1CA4E3DF007738E6 /* Library */,
 				8573383B1CA4CDB6007738E6 /* Storyboards */,
@@ -243,6 +268,7 @@
 				85F084261C9F0091004CE692 /* Note.swift */,
 				857338461CA4E1CA007738E6 /* Tag.swift */,
 				85F0842B1C9F03FB004CE692 /* Reminder.swift */,
+				8589DB8D1CB83C2A0019511F /* Place.swift */,
 				85F084281C9F00F4004CE692 /* Model.xcdatamodeld */,
 			);
 			name = Models;
@@ -257,6 +283,7 @@
 				85754A981CA770050023DFAF /* NotePreviewViewController.swift */,
 				85754A9A1CA890640023DFAF /* SideMenuViewController.swift */,
 				85134DEE1CACB8A300B1C81B /* AddReminderViewController.swift */,
+				8589DB851CB81F8D0019511F /* PlaceSearchViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -264,10 +291,16 @@
 		85F0842E1C9F1556004CE692 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				8589DB871CB820840019511F /* Reachability.h */,
+				8589DB881CB820840019511F /* Reachability.m */,
 				855E40C41CA354C60029F5E9 /* PersistenceStack.swift */,
 				855E40C21CA354A20029F5E9 /* RelativeDateFormatter.swift */,
 				85F0842F1C9F1599004CE692 /* UITableViewFRCDataSource.swift */,
 				85754A901CA6C41B0023DFAF /* FilterableFRCDataSource.swift */,
+				8589DB831CB8066A0019511F /* AppearanceProxy.h */,
+				8589DB811CB806470019511F /* AppearanceProxy.m */,
+				8589DB801CB806460019511F /* PeekNote-Bridging-Header.h */,
+				8589DB901CBC725D0019511F /* Alert.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -346,7 +379,7 @@
 		85F083A91C9EF78E004CE692 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0720;
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Ahmed Onawale";
 				TargetAttributes = {
@@ -471,23 +504,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				85134DEF1CACB8A300B1C81B /* AddReminderViewController.swift in Sources */,
+				8589DB861CB81F8D0019511F /* PlaceSearchViewController.swift in Sources */,
 				85754A971CA74B4A0023DFAF /* TagCellHeader.swift in Sources */,
+				8589DB911CBC725D0019511F /* Alert.swift in Sources */,
+				8589DB8E1CB83C2B0019511F /* Place.swift in Sources */,
 				857338471CA4E1CA007738E6 /* Tag.swift in Sources */,
 				85F084321C9F1B48004CE692 /* Extension.swift in Sources */,
 				85F084271C9F0091004CE692 /* Note.swift in Sources */,
 				85754A9B1CA890640023DFAF /* SideMenuViewController.swift in Sources */,
+				8589DB821CB806470019511F /* AppearanceProxy.m in Sources */,
 				85754A991CA770050023DFAF /* NotePreviewViewController.swift in Sources */,
 				855E40C31CA354A20029F5E9 /* RelativeDateFormatter.swift in Sources */,
 				85F0842C1C9F03FB004CE692 /* Reminder.swift in Sources */,
 				85F084351C9F5D54004CE692 /* NoteTableViewCell.swift in Sources */,
 				85F084301C9F1599004CE692 /* UITableViewFRCDataSource.swift in Sources */,
 				85754A461CA5A1A20023DFAF /* DottedLine.swift in Sources */,
+				8589DB891CB820840019511F /* Reachability.m in Sources */,
 				855E40C51CA354C60029F5E9 /* PersistenceStack.swift in Sources */,
 				85F083B91C9EF78E004CE692 /* NoteDetailViewController.swift in Sources */,
 				85F083B71C9EF78E004CE692 /* NotesViewController.swift in Sources */,
 				85F083B51C9EF78E004CE692 /* AppDelegate.swift in Sources */,
 				85754A911CA6C41B0023DFAF /* FilterableFRCDataSource.swift in Sources */,
 				8573383A1CA4AFF6007738E6 /* TagListViewController.swift in Sources */,
+				8589DB8B1CB821010019511F /* APIClient.swift in Sources */,
 				85F0842A1C9F00F4004CE692 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -631,6 +670,7 @@
 			baseConfigurationReference = D071E1131B8CC1FA6780B648 /* Pods-PeekNote.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PeekNote/PeekNote.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -640,6 +680,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahmedonawale.PeekNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "PeekNote/PeekNote-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -648,6 +690,7 @@
 			baseConfigurationReference = B59871193A656AED416F7439 /* Pods-PeekNote.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PeekNote/PeekNote.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -657,6 +700,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahmedonawale.PeekNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "PeekNote/PeekNote-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -753,9 +797,10 @@
 		85F084281C9F00F4004CE692 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				8589DB8F1CBA51F20019511F /* Model v2.xcdatamodel */,
 				85F084291C9F00F4004CE692 /* Model.xcdatamodel */,
 			);
-			currentVersion = 85F084291C9F00F4004CE692 /* Model.xcdatamodel */;
+			currentVersion = 8589DB8F1CBA51F20019511F /* Model v2.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

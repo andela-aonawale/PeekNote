@@ -85,7 +85,9 @@ final class PersistenceStack {
         let coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let storeURL = self.applicationDocumentsDirectory.URLByAppendingPathComponent(SQLITE_FILE_NAME)
         
-        let storeOptions = [NSPersistentStoreUbiquitousContentNameKey: "iCloudPeekNoteStore"]
+        let storeOptions = [NSPersistentStoreUbiquitousContentNameKey: "iCloudPeekNoteStore",
+                            NSMigratePersistentStoresAutomaticallyOption: true,
+                            NSInferMappingModelAutomaticallyOption: true]
         
         print("sqlite path: \(storeURL.path!)")
         

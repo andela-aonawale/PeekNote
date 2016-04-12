@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Xcode 7.0">
+    <entity name="Note" representedClassName=".Note" syncable="YES">
+        <attribute name="body" attributeType="String" syncable="YES"/>
+        <attribute name="creationDate" attributeType="Date" syncable="YES"/>
+        <attribute name="state" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" attributeType="String" syncable="YES"/>
+        <attribute name="updatedDate" attributeType="Date" syncable="YES"/>
+        <relationship name="reminder" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Reminder" inverseName="note" inverseEntity="Reminder" syncable="YES"/>
+        <relationship name="tags" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="notes" inverseEntity="Tag" syncable="YES"/>
+    </entity>
+    <entity name="Place" representedClassName=".Place" syncable="YES">
+        <attribute name="id" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="region" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="trigger" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="reminder" maxCount="1" deletionRule="Nullify" destinationEntity="Reminder" inverseName="place" inverseEntity="Reminder" syncable="YES"/>
+    </entity>
+    <entity name="Reminder" representedClassName=".Reminder" syncable="YES">
+        <attribute name="date" attributeType="Date" syncable="YES"/>
+        <attribute name="repeats" attributeType="Integer 16" syncable="YES"/>
+        <relationship name="note" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Note" inverseName="reminder" inverseEntity="Note" syncable="YES"/>
+        <relationship name="place" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Place" inverseName="reminder" inverseEntity="Place" syncable="YES"/>
+    </entity>
+    <entity name="Tag" representedClassName=".Tag" syncable="YES">
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <relationship name="notes" toMany="YES" deletionRule="Nullify" destinationEntity="Note" inverseName="tags" inverseEntity="Note" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Note" positionX="-63" positionY="-18" width="128" height="150"/>
+        <element name="Reminder" positionX="-54" positionY="18" width="128" height="105"/>
+        <element name="Tag" positionX="-54" positionY="27" width="128" height="75"/>
+        <element name="Place" positionX="-54" positionY="45" width="128" height="150"/>
+    </elements>
+</model>

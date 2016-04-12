@@ -489,11 +489,7 @@
                     </tableView>
                     <toolbarItems>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="SXw-1b-RBn"/>
-                        <barButtonItem image="Edit" id="p9Y-eJ-5i2">
-                            <connections>
-                                <action selector="insertNewNote:" destination="7bK-jq-Zjz" id="crE-7b-pxX"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem image="Write" id="p9Y-eJ-5i2"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Notes" id="Zdf-7t-Un8">
                         <barButtonItem key="leftBarButtonItem" image="Menu" id="fne-3F-f06"/>
@@ -526,10 +522,10 @@
     <resources>
         <image name="Alarm Clock" width="25" height="25"/>
         <image name="Cancel" width="25" height="25"/>
-        <image name="Edit" width="23" height="23"/>
         <image name="Menu" width="25" height="25"/>
         <image name="Reminder" width="25" height="25"/>
         <image name="Tag" width="25" height="25"/>
+        <image name="Write" width="23" height="23"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="7bP-dR-LQq"/>

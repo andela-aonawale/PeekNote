@@ -23,29 +23,20 @@ final class NoteDetailViewController: UIViewController {
     @IBOutlet weak var reminderLabel: UILabel!
     @IBOutlet weak var remindButton: UIButton!
     @IBOutlet weak var deleteReminderButton: UIButton!
-    
-    func configureView() {
-        guard note != nil else { return }
-        titleTextFiled.text = note.title
-        bodyTextView.text = note.body
-        dateLabel.text = note.creationDate.prettified
-        tagListView.alignment = .Right
-        checkIfNoteIsValid()
-    }
-    
+
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        guard note != nil else { return }
         unsubscribeToKeyboardNotifications()
         view.endEditing(true)
         // make sure we are returning to NotesViewController
         // and not presenting tags view controller
         guard presentedViewController == nil else { return }
-        guard note != nil else { return }
-        note.title = titleTextFiled.text!
-        note.body = bodyTextView.text
-        note.updatedDate = NSDate()
         if note.title.isEmpty && note.body.isEmpty {
             managedObjectContext.deleteObject(note)
+        } else if note.hasChanges {
+            note.updatedDate = NSDate()
+            managedObjectContext.saveChanges()
         }
     }
     
@@ -55,9 +46,15 @@ final class NoteDetailViewController: UIViewController {
         subscribeToKeyboardNotifications()
         tagListView.removeAllTags()
         note.tags.forEach { tagListView.addTag($0.name) }
+        
         guard let reminder = note.reminder else { return }
-        reminderLabel.text = String.mediumDateShortTime(reminder.date)
-        reminderLabel.text = reminderLabel.text?.stringByAppendingString("\nRepeats: \(reminder.repeats.title())")
+        if let place = reminder.place {
+            reminderLabel.text = place.trigger.title()
+            reminderLabel.text = reminderLabel.text?.stringByAppendingString("\n\(place.name), \(place.region)")
+        } else {
+            reminderLabel.text = String.mediumDateShortTime(reminder.date)
+            reminderLabel.text = reminderLabel.text?.stringByAppendingString("\nRepeats: \(reminder.repeats.title())")
+        }
         reminderLabel.textColor = .lightGrayColor()
         reminderLabel.font = .systemFontOfSize(14)
         remindButton.setImage(UIImage(named: "Alarm Clock"), forState: .Normal)
@@ -76,7 +73,14 @@ final class NoteDetailViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
         navigationItem.leftItemsSupplementBackButton = true
-        configureView()
+        view.backgroundColor = .backgroundColor()
+        
+        guard note != nil else { return }
+        titleTextFiled.text = note.title
+        bodyTextView.text = note.body
+        dateLabel.text = note.creationDate.prettified
+        tagListView.alignment = .Right
+        checkIfNoteIsValid()
     }
 
     override func didReceiveMemoryWarning() {
@@ -116,11 +120,12 @@ final class NoteDetailViewController: UIViewController {
     }
     
     @IBAction func textDidChange(sender: UITextField) {
+        note.title = sender.text!
         checkIfNoteIsValid()
     }
     
     func checkIfNoteIsValid() {
-        let enable = !titleTextFiled.text!.isEmpty || !bodyTextView.text.isEmpty
+        let enable = !note.title.isEmpty || !note.body.isEmpty
         navigationItem.rightBarButtonItem?.enabled = enable
         reminderLabel.userInteractionEnabled = enable
         reminderLabel.textColor = enable ? .secondaryColor() : .lightGrayColor()
@@ -132,6 +137,7 @@ final class NoteDetailViewController: UIViewController {
 extension NoteDetailViewController: UITextViewDelegate {
     
     func textViewDidChange(textView: UITextView) {
+        note.body = textView.text
         checkIfNoteIsValid()
     }
     

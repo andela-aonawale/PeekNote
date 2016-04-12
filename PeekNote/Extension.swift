@@ -9,13 +9,49 @@
 import Foundation
 import UIKit
 import CoreData
+import CoreLocation
+
+let showNetworkActivityIndicator = { visible in
+    UIApplication.sharedApplication().networkActivityIndicatorVisible = visible
+}
+
+extension UITableView {
+    
+    func reloadSection(index: Int) {
+        reloadSections(NSIndexSet(index: index), withRowAnimation: .Automatic)
+    }
+    
+}
 
 extension NSManagedObjectContext {
+    
     func saveChanges() {
         do {
             try save()
-        } catch {}
+        } catch {
+            rollback()
+        }
     }
+    
+    func fetchEntity(entity: NSManagedObject.Type, matchingPredicate predicate: NSPredicate?, sortBy: [String: Bool]?) -> [NSManagedObject]? {
+        let fetchRequest = NSFetchRequest(entityName: entity.entityName())
+        fetchRequest.predicate = predicate
+        fetchRequest.sortDescriptors = sortBy?.map { NSSortDescriptor(key: $0, ascending: $1)}
+        do {
+            return try executeFetchRequest(fetchRequest) as? [NSManagedObject]
+        } catch {
+            return nil
+        }
+    }
+    
+    func deleteAllEntity(entity: NSManagedObject.Type, matchingPredicate predicate: NSPredicate?) {
+        let fetchRequest = NSFetchRequest(entityName: entity.entityName())
+        fetchRequest.predicate = predicate
+        fetchRequest.includesPropertyValues = false
+        let managedObjects = fetchEntity(entity, matchingPredicate: predicate, sortBy: nil)
+        managedObjects?.forEach { deleteObject($0) }
+    }
+    
 }
 
 extension NSManagedObject {
@@ -52,10 +88,19 @@ extension UILocalNotification {
             UIApplication.sharedApplication().cancelLocalNotification(notification)
         }
         let notification = UILocalNotification()
-        notification.fireDate = reminder.date
-        notification.timeZone = .defaultTimeZone()
+        if let place = reminder.place {
+            let coordinate = CLLocationCoordinate2D(latitude: place.latitude, longitude: place.longitude)
+            let region = CLCircularRegion(center: coordinate, radius: 100, identifier: place.id)
+            region.notifyOnEntry = place.trigger == .OnEntry
+            region.notifyOnExit = place.trigger == .OnExit
+            notification.region = region
+            notification.regionTriggersOnce = false
+        } else {
+            notification.fireDate = reminder.date
+            notification.timeZone = .defaultTimeZone()
+            notification.repeatInterval = reminder.repeats.calendarUnit()
+        }
         notification.alertBody = reminder.note?.title
-        notification.repeatInterval = reminder.repeats.calendarUnit()
         notification.soundName = UILocalNotificationDefaultSoundName
         notification.userInfo = ["objectID": objectID]
         UIApplication.sharedApplication().scheduleLocalNotification(notification)
@@ -70,6 +115,21 @@ extension Int {
 }
 
 extension NSDate {
+    
+    static var dateFormatter: RelativeDateFormatter {
+        struct Static {
+            static var onceToken: dispatch_once_t = 0
+            static var instance: RelativeDateFormatter?
+        }
+        dispatch_once(&Static.onceToken) {
+            Static.instance = RelativeDateFormatter()
+        }
+        return Static.instance!
+    }
+    
+    var prettified: String {
+        return NSDate.dateFormatter.stringForDate(self)
+    }
     
     class var nextHourDate: NSDate {
         let calendar = NSCalendar.currentCalendar()
@@ -106,27 +166,23 @@ public func <(lhs: NSDate, rhs: NSDate) -> Bool {
 extension UIColor {
     
     static func primaryColor() -> UIColor {
-        return .whiteColor()
+        return UIColor(red:0.92, green:0.76, blue:0.31, alpha:1.00)
     }
     
     static func secondaryColor() -> UIColor {
-        return UIColor(red:1.00, green:0.73, blue:0.00, alpha:1.00)
-    }
-    
-    static func subSecondaryColor() -> UIColor {
         return UIColor(red: 0.29, green: 0.31, blue: 0.33, alpha: 1.00)
     }
-    
-    static func highlightedColor() -> UIColor {
-        return UIColor(red: 1, green: 0.7, blue: 0.12, alpha: 1)
-    }
-    
+
     static func trashColor() -> UIColor {
         return UIColor(red: 0.29, green: 0.31, blue: 0.33, alpha: 1.00)
     }
     
     static func deleteColor() -> UIColor {
         return UIColor(red:0.90, green: 0.23, blue: 0.05, alpha: 1.00)
+    }
+    
+    static func backgroundColor() -> UIColor {
+        return UIColor(patternImage: UIImage(named: "background")!)
     }
     
 }
@@ -182,25 +238,6 @@ extension UIView {
         view.addConstraints([c1, c2, c3, c4])
         return view
     }
-}
-
-extension NSDate {
-    
-    static var dateFormatter: RelativeDateFormatter {
-        struct Static {
-            static var onceToken: dispatch_once_t = 0
-            static var instance: RelativeDateFormatter?
-        }
-        dispatch_once(&Static.onceToken) {
-            Static.instance = RelativeDateFormatter()
-        }
-        return Static.instance!
-    }
-    
-    var prettified: String {
-        return NSDate.dateFormatter.stringForDate(self)
-    }
-    
 }
 
 extension UIViewController {

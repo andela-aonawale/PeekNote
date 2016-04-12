@@ -15,6 +15,7 @@ final class Reminder: NSManagedObject {
     @NSManaged var date: NSDate
     @NSManaged var repeats: Repeat
     @NSManaged var note: Note?
+    @NSManaged var place: Place?
     
     convenience init(date: NSDate, repeats: Repeat, insertIntoManagedObjectContext context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName(Reminder.entityName(), inManagedObjectContext: context)!

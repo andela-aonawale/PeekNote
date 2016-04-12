@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TagListView
 import SWRevealViewController
 
 @UIApplicationMain
@@ -31,19 +32,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let notesVC = nav.topViewController as! NotesViewController
         notesVC.managedObjectContext = persistenceStack.managedObjectContext
         notesVC.fetchPredicate = NSPredicate(format: "state == \(State.Normal.rawValue)")
-        
+        splitViewController.delegate = self
         // application wide customization
         UINavigationBar.appearance().barStyle = UIBarStyle.Black
         UINavigationBar.appearance().translucent = false
-        UINavigationBar.appearance().barTintColor = .secondaryColor()
-        UINavigationBar.appearance().tintColor = .primaryColor()
+        UINavigationBar.appearance().barTintColor = .primaryColor()
+        UINavigationBar.appearance().tintColor = .whiteColor()
+        
+        UISegmentedControl.appearance().tintColor = .primaryColor()
+        
+        if #available(iOS 9.0, *) {
+            UIView.appearanceWhenContainedInInstancesOfClasses([NotesViewController.self]).backgroundColor = .backgroundColor()
+            UIView.appearanceWhenContainedInInstancesOfClasses([NoteDetailViewController.self]).backgroundColor = .backgroundColor()
+        } else {
+            // Fallback on earlier versions
+            UIView.my_appearanceWhenContainedIn(NotesViewController.self).backgroundColor = .backgroundColor()
+            UIView.my_appearanceWhenContainedIn(NoteDetailViewController.self).backgroundColor = .backgroundColor()
+        }
+        
         window?.tintColor = .secondaryColor()
         
         // set SWRevealViewController as rootviewcontroller
         let revealViewController = SWRevealViewController(rearViewController: rearNavController, frontViewController: splitViewController)
         window?.rootViewController = revealViewController
         window?.makeKeyAndVisible()
-        
+
         return true
     }
 
