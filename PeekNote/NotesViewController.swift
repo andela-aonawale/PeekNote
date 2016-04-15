@@ -8,7 +8,7 @@
 
 import UIKit
 import CoreData
-import MCSwipeTableViewCell
+import MGSwipeTableCell
 import SWRevealViewController
 
 private let cacheName = "NotesCache"
@@ -17,7 +17,7 @@ final class NotesViewController: UITableViewController {
     
     var managedObjectContext: NSManagedObjectContext!
     var tableViewDataSource: UITableViewFRCDataSource!
-    
+    var controllerState: ControllerState?
     var fetchPredicate: NSPredicate? {
         didSet {
             NSFetchedResultsController.deleteCacheWithName(cacheName)
@@ -54,11 +54,11 @@ final class NotesViewController: UITableViewController {
         guard let revealViewController = revealViewController() else { return }
         menuButton.target = revealViewController
         menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-        view.addGestureRecognizer(revealViewController.panGestureRecognizer())
     }
     
-    func configureNavigation() {
-        navigationItem.rightBarButtonItem = editButtonItem()
+    func configurePeepPop() {
+        guard #available(iOS 9.0, *), traitCollection.forceTouchCapability == .Available else { return }
+        registerForPreviewingWithDelegate(self, sourceView: view)
     }
     
     override func didReceiveMemoryWarning() {
@@ -68,37 +68,36 @@ final class NotesViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureDataSource()
-        configureNavigation()
         configureTableView()
         configureSidebar()
+        configurePeepPop()
         configureToolbar()
         splitViewController?.delegate = self
     }
 
     override func viewWillAppear(animated: Bool) {
+        clearsSelectionOnViewWillAppear = splitViewController!.collapsed
         super.viewWillAppear(animated)
-        self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
     }
     
     func configureToolbar() {
-        guard let title = Title(rawValue: title ?? "") else {
-            navigationController?.toolbarHidden = false
-            setToolbarItems(itemsForState(Title.Tag), animated: false)
-            return
-        }
-        switch title {
-        case .Reminders, .Archive:
+        guard let state = controllerState else { return }
+        switch state {
+        case .Archive:
             navigationController?.toolbarHidden = true
         case .Trash:
             navigationController?.toolbarHidden = false
-            setToolbarItems(itemsForState(title), animated: false)
+            setToolbarItems(itemsForState(state, title: ""), animated: false)
+        case .Reminders:
+            navigationController?.toolbarHidden = false
+            setToolbarItems(itemsForState(state, title: "Reminder"), animated: false)
         default:
             navigationController?.toolbarHidden = false
-            setToolbarItems(itemsForState(title), animated: false)
+            setToolbarItems(itemsForState(state, title: "Note"), animated: false)
         }
     }
     
-    func itemsForState(state: Title) -> [UIBarButtonItem] {
+    func itemsForState(state: ControllerState, title: String) -> [UIBarButtonItem] {
         switch state {
         case .Trash:
             let item1 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
@@ -107,9 +106,13 @@ final class NotesViewController: UITableViewController {
             let item3 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
             return [item1, item2, item3]
         default:
+            let count = fetchedResultsController.fetchedObjects?.count ?? 0
+            let title = count < 1 ? "No \(title)s" : count > 1 ? "\(count) \(title)s" : "\(count) \(title)"
             let item1 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
-            let item2 = UIBarButtonItem(image: UIImage(named: "Write"), style: .Plain, target: self, action: #selector(newNote(_:)))
-            return [item1, item2]
+            let item2 = UIBarButtonItem(title: title, style: .Plain, target: nil, action: nil)
+            let item3 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
+            let item4 = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: #selector(newNote(_:)))
+            return [item1, item2, item3, item4]
         }
     }
     
@@ -124,12 +127,15 @@ final class NotesViewController: UITableViewController {
         }, cancelAction: nil)
     }
     
-    func newNote(sender: UIBarButtonItem) {
+    func newNote(sender: UIBarButtonItem?) {
+        guard let state = controllerState else { return }
         let note = Note(title: "", body: "", insertIntoManagedObjectContext: managedObjectContext)
-        if let title = title where Title(rawValue: title) == nil  {
-            let predicate = NSPredicate(format: "name == %@", title)
-            let tag = managedObjectContext.fetchEntity(Tag.self, matchingPredicate: predicate, sortBy: nil)?.first as! Tag
+        switch state {
+        case .Tag(let name):
+            let predicate = NSPredicate(format: "name == %@", name!)
+            let tag = managedObjectContext.fetchEntity(Tag.self, matchingPredicate: predicate)?.first as! Tag
             tag.notes.insert(note)
+        default: break
         }
         performSegueWithIdentifier("showDetail", sender: note)
     }
@@ -150,6 +156,70 @@ final class NotesViewController: UITableViewController {
     }
 }
 
+extension NotesViewController: PreviewControllerDelegate {
+    
+    func tagNote(note: Note) {
+        let viewController = TagListViewController(managedObjectContext: managedObjectContext, note: note)
+        presentViewController(viewController, barButtonItem: nil, completion: nil)
+    }
+    
+    func shareNote(note: Note) {
+        let activityViewController = UIActivityViewController(activityItems: [note.shareableString], applicationActivities: nil)
+        presentViewController(activityViewController, animated: true, completion: nil)
+    }
+    
+    func addReminderToNote(note: Note) {
+        let viewController = AddReminderViewController(managedObjectContext: managedObjectContext, note: note)
+        presentViewController(viewController, barButtonItem: nil) {
+            let settings = UIUserNotificationSettings( forTypes: [.Alert, .Sound, .Badge], categories: nil)
+            UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        }
+    }
+    
+    func deleteNote(note: Note) {
+        managedObjectContext.deleteObject(note)
+        managedObjectContext.saveChanges()
+    }
+    
+}
+
+@available(iOS 9.0, *)
+extension NotesViewController: UIViewControllerPreviewingDelegate {
+    // MARK: UIViewControllerPreviewingDelegate
+    
+    /// Create a previewing view controller to be shown at "Peek".
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        // Obtain the index path and the cell that was pressed.
+        guard let indexPath = tableView.indexPathForRowAtPoint(location),
+        cell = tableView.cellForRowAtIndexPath(indexPath),
+        detailViewController = storyboard?.instantiateViewControllerWithIdentifier("NoteDetailViewController") as? NoteDetailViewController,
+        note = fetchedResultsController.objectAtIndexPath(indexPath) as? Note else { return nil }
+        detailViewController.note = note
+        detailViewController.managedObjectContext = managedObjectContext
+        detailViewController.delegate = self
+        
+        /*
+         Set the height of the preview by setting the preferred content size of the detail view controller.
+         Width should be zero, because it's not used in portrait.
+         */
+        let minimumSize = detailViewController.view.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+        detailViewController.preferredContentSize = CGSize(width: 0.0, height: minimumSize.height)
+        
+        // Set the source rect to the cell frame, so surrounding elements are blurred.
+        previewingContext.sourceRect = cell.frame
+        
+        return detailViewController
+    }
+    
+    /// Present the view controller for the "Pop" action.
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+        // Reuse the "Peek" view controller for presentation.
+        showViewController(viewControllerToCommit, sender: self)
+        navigationController?.setToolbarHidden(true, animated: true)
+    }
+    
+}
+
 extension NotesViewController: UISplitViewControllerDelegate {
     
     // MARK: - Split view
@@ -164,84 +234,79 @@ extension NotesViewController: UISplitViewControllerDelegate {
     
 }
 
-extension NotesViewController: UITableViewFRCDataSourceDelegate {
+extension NotesViewController: MGSwipeTableCellDelegate {
+    // Mark: MGSwipeTableCellDelegate
     
+    func setupButton(button: UIButton...) {
+        button.forEach {
+            let spacing: CGFloat = 5.0
+            let imageSize = $0.imageView!.image!.size
+            $0.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: -imageSize.width, bottom: -(imageSize.height + spacing), right: 0.0)
+            let labelString = NSString(string: $0.titleLabel!.text!)
+            let titleSize = labelString.sizeWithAttributes([NSFontAttributeName: $0.titleLabel!.font])
+            $0.imageEdgeInsets = UIEdgeInsets(top: -(titleSize.height + spacing), left: 0.0, bottom: 0.0, right: -titleSize.width)
+        }
+    }
+    
+    func swipeTableCell(cell: MGSwipeTableCell!, swipeButtonsForDirection direction: MGSwipeDirection, swipeSettings: MGSwipeSettings!, expansionSettings: MGSwipeExpansionSettings!) -> [AnyObject]! {
+        guard let state = controllerState where direction == .RightToLeft else { return nil }
+        swipeSettings.transition = .Border
+        expansionSettings.buttonIndex = 0
+        expansionSettings.fillOnTrigger = true
+        expansionSettings.threshold = 1
+
+        let trash = MGSwipeButton(title: "Trash", icon: UIImage(named: "Trash Filled"), backgroundColor: .redColor(), padding: 5) {
+            ($0 as! NoteTableViewCell).note.state = .Trashed
+            return false
+        }
+        let archive = MGSwipeButton(title: "Archive", icon: UIImage(named: "Archive Filled"), backgroundColor: .trashColor(), padding: 5) {
+            ($0 as! NoteTableViewCell).note.state = .Archived
+            return false
+        }
+        let unarchive = MGSwipeButton(title: "Unarchive", icon: UIImage(named: "Delete Archive"), backgroundColor: .trashColor(), padding: 5) {
+            ($0 as! NoteTableViewCell).note.state = .Normal
+            return false
+        }
+        let recover = MGSwipeButton(title: "Recover", icon: UIImage(named: "Recover Trash"), backgroundColor: .trashColor(), padding: 5) {
+            ($0 as! NoteTableViewCell).note.state = .Normal
+            return false
+        }
+        let delete = MGSwipeButton(title: "Delete", icon: UIImage(named: "Delete Filled"), backgroundColor: .redColor(), padding: 5) { [unowned self] cell in
+            let message = "Are you sure you want to delete this note"
+            Alert.warn(self, title: nil, message: message, confirmTitle: "Delete", confirmAction: { _ in
+                self.managedObjectContext.deleteObject((cell as! NoteTableViewCell).note)
+            }, cancelAction: { _ in
+                cell.hideSwipeAnimated(true)
+            })
+            return false
+        }
+        
+        setupButton(trash, archive, unarchive, recover, delete)
+        
+        switch state {
+        case .Archive:
+            return [trash, unarchive]
+        case .Trash:
+            return [delete, recover]
+        default:
+            return [trash, archive]
+        }
+    }
+    
+}
+
+extension NotesViewController: UITableViewFRCDataSourceDelegate {
+
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath, withObject object: NSManagedObject) {
         guard let cell = cell as? NoteTableViewCell,
         note = object as? Note else { return }
         cell.note = note
-        cell.firstTrigger = 0.4
-        cell.secondTrigger = 0.6
-        cell.defaultColor = UIColor.lightGrayColor()
-        customizeCell(cell, forState: note.state)
+        cell.delegate = self
     }
     
-    typealias CellStyle = (firstView: UIView, secondView: UIView, firstColor: UIColor, secondColor: UIColor)
-    
-    func cellStyleForState(state: State) -> CellStyle {
-        var firstView: UIView!
-        var secondView: UIView!
-        var firstColor: UIColor!
-        var secondColor: UIColor!
-        
-        switch state {
-        case .Normal:
-            firstView = UIView.viewWithImageNamed("Archive Filled", labelName: "Archive")
-            secondView = UIView.viewWithImageNamed("Trash Filled", labelName: "Trash")
-            firstColor = .trashColor()
-            secondColor = .deleteColor()
-        case .Archived:
-            firstView = UIView.viewWithImageNamed("Delete Archive Filled", labelName: "Unarchive")
-            secondView = UIView.viewWithImageNamed("Trash Filled", labelName: "Trash")
-            firstColor = .trashColor()
-            secondColor = .deleteColor()
-        case .Trashed:
-            firstView = UIView.viewWithImageNamed("Recover Trash", labelName: "Recover")
-            secondView = UIView.viewWithImageNamed("Delete Filled", labelName: "Delete")
-            firstColor = .trashColor()
-            secondColor = .deleteColor()
-        }
-        
-        return (firstView, secondView, firstColor, secondColor)
+    func didChangeObject(anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        configureToolbar()
     }
-    
-    func customizeCell(cell: MCSwipeTableViewCell, forState noteState: State) {
-        let style = cellStyleForState(noteState)
-        cell.setSwipeGestureWithView(style.firstView, color: style.firstColor, mode: .Exit, state: .State3) { [weak self] cell, state, _ in
-            self?.commitCell(cell, toState: state, withNoteState: noteState)
-        }
-        cell.setSwipeGestureWithView(style.secondView, color: style.secondColor, mode: .Exit, state: .State4) { [weak self] cell, state, _ in
-            self?.commitCell(cell, toState: state, withNoteState: noteState)
-        }
-    }
-    
-    func commitCell(cell: MCSwipeTableViewCell, toState state: MCSwipeTableViewCellState, withNoteState noteState: State) {
-        guard let indexPath = tableView.indexPathForCell(cell) else { return }
-        guard let note = fetchedResultsController.objectAtIndexPath(indexPath) as? Note else { return }
-        
-        switch noteState {
-        case .Normal:
-            (state == .State3) ? (note.state = .Archived) : (note.state = .Trashed)
-        case .Archived:
-            state == .State3 ? (note.state = .Normal) : (note.state = .Trashed)
-        case .Trashed:
-            state == .State3 ? (note.state = .Normal) : {
-                let message = "Are you sure you want to delete this note"
-                Alert.warn(self, title: nil, message: message, confirmTitle: "Delete", confirmAction: { [weak self] _ in
-                    self?.managedObjectContext.deleteObject(note)
-                }, cancelAction: { _ in
-                    cell.swipeToOriginWithCompletion(nil)
-                })
-            }()
-        }
-        guard note.hasChanges else { return }
-        managedObjectContext.saveChanges()
-    }
-    
-    func deleteObject(object: NSManagedObject) {
-        managedObjectContext.deleteObject(object)
-    }
-    
 }
 
 extension NotesViewController {

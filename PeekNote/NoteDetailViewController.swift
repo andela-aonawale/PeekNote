@@ -10,10 +10,26 @@ import UIKit
 import CoreData
 import TagListView
 
+protocol PreviewControllerDelegate: class {
+    func tagNote(note: Note)
+    func shareNote(note: Note)
+    func addReminderToNote(note: Note)
+    func deleteNote(note: Note)
+}
+
 final class NoteDetailViewController: UIViewController {
 
     var note: Note!
     var managedObjectContext: NSManagedObjectContext!
+    
+    private enum PreviewAction: String {
+        case Tag
+        case RemindMe = "Remind me"
+        case Share
+        case Delete
+    }
+    
+    weak var delegate: PreviewControllerDelegate?
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var dateLabel: UILabel!
@@ -23,11 +39,54 @@ final class NoteDetailViewController: UIViewController {
     @IBOutlet weak var reminderLabel: UILabel!
     @IBOutlet weak var remindButton: UIButton!
     @IBOutlet weak var deleteReminderButton: UIButton!
+    
+    // Preview action items.
+    @available(iOS 9.0, *)
+    lazy var previewActions: [UIPreviewActionItem] = {
+        func previewActionForTitle(title: String, style: UIPreviewActionStyle = .Default) -> UIPreviewAction {
+            return UIPreviewAction(title: title, style: style) { previewAction, viewController in
+                guard let detailViewController = viewController as? NoteDetailViewController,
+                note = detailViewController.note,
+                previewAction = PreviewAction(rawValue: previewAction.title) else { return }
+                switch previewAction {
+                case .Tag:
+                    detailViewController.delegate?.tagNote(note)
+                case .Share:
+                    detailViewController.delegate?.shareNote(note)
+                case .RemindMe:
+                    detailViewController.delegate?.addReminderToNote(note)
+                case .Delete:
+                    detailViewController.delegate?.deleteNote(note)
+                }
+            }
+        }
+        
+        let action1 = previewActionForTitle(PreviewAction.Tag.rawValue)
+        let action2 = previewActionForTitle(PreviewAction.Share.rawValue)
+        let action3 = previewActionForTitle(PreviewAction.RemindMe.rawValue)
+        let action4 = previewActionForTitle(PreviewAction.Delete.rawValue, style: .Destructive)
+        
+        return [action1, action2, action3, action4]
+    }()
+    
+    // MARK: Preview actions
+    
+    @available(iOS 9.0, *)
+    override func previewActionItems() -> [UIPreviewActionItem] {
+        return previewActions
+    }
+    
+    @IBAction func shareNote(sender: UIBarButtonItem) {
+        let activityViewController = UIActivityViewController(activityItems: [note.shareableString], applicationActivities: nil)
+        presentViewController(activityViewController, animated: true, completion: nil)
+    }
+    
+    // MARK: Life cycle
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        guard note != nil else { return }
         unsubscribeToKeyboardNotifications()
+        guard note != nil else { return }
         view.endEditing(true)
         // make sure we are returning to NotesViewController
         // and not presenting tags view controller
@@ -42,8 +101,8 @@ final class NoteDetailViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        guard note != nil else { return }
         subscribeToKeyboardNotifications()
+        guard note != nil else { return }
         tagListView.removeAllTags()
         note.tags.forEach { tagListView.addTag($0.name) }
         
@@ -73,8 +132,6 @@ final class NoteDetailViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
         navigationItem.leftItemsSupplementBackButton = true
-        view.backgroundColor = .backgroundColor()
-        
         guard note != nil else { return }
         titleTextFiled.text = note.title
         bodyTextView.text = note.body
@@ -88,22 +145,13 @@ final class NoteDetailViewController: UIViewController {
     }
     
     @IBAction func showTags(sender: UIBarButtonItem) {
-        let viewController = TagListViewController(style: .Plain)
-        viewController.managedObjectContext = managedObjectContext
-        viewController.note = note
-        let navCon = UINavigationController(rootViewController: viewController)
-        navCon.modalPresentationStyle = .Popover
-        let ppc = navCon.popoverPresentationController
-        ppc?.barButtonItem = navigationItem.rightBarButtonItem
-        presentViewController(navCon, animated: true, completion: nil)
+        let viewController = TagListViewController(managedObjectContext: managedObjectContext, note: note)
+        presentViewController(viewController, barButtonItem: navigationItem.rightBarButtonItem, completion: nil)
     }
     
     @IBAction func addReminder(sender: UITapGestureRecognizer) {
-        let viewController = AddReminderViewController()
-        viewController.note = note
-        viewController.managedObjectContext = managedObjectContext
-        let navCon = UINavigationController(rootViewController: viewController)
-        presentViewController(navCon, animated: true) {
+        let viewController = AddReminderViewController(managedObjectContext: managedObjectContext, note: note)
+        presentViewController(viewController, barButtonItem: nil) {
             let settings = UIUserNotificationSettings( forTypes: [.Alert, .Sound, .Badge], categories: nil)
             UIApplication.sharedApplication().registerUserNotificationSettings(settings)
         }
@@ -126,7 +174,8 @@ final class NoteDetailViewController: UIViewController {
     
     func checkIfNoteIsValid() {
         let enable = !note.title.isEmpty || !note.body.isEmpty
-        navigationItem.rightBarButtonItem?.enabled = enable
+        navigationItem.rightBarButtonItems?.first?.enabled = enable
+        navigationItem.rightBarButtonItems?.last?.enabled = enable
         reminderLabel.userInteractionEnabled = enable
         reminderLabel.textColor = enable ? .secondaryColor() : .lightGrayColor()
         remindButton.enabled = enable

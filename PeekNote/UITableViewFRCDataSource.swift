@@ -11,6 +11,8 @@ import CoreData
 import UIKit
 
 @objc protocol UITableViewFRCDataSourceDelegate: class {
+    optional func didChangeObject(anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?)
+    optional func didDeleteRowAtIndexPath(indexPath: NSIndexPath)
     optional func viewForHeaderinSection(section: Int) -> UIView?
     optional func didSearchForText(searchText: String, matches: [NSManagedObject])
     optional func didSelectCell(cell: UITableViewCell, withObject object: NSManagedObject)
@@ -54,8 +56,7 @@ extension UITableViewFRCDataSource: UITableViewDataSource {
     // MARK: - Table View data source
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = fetchedResultsController.sections![section]
-        return sectionInfo.numberOfObjects
+        return fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -67,21 +68,6 @@ extension UITableViewFRCDataSource: UITableViewDataSource {
         let object = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
         delegate?.configureCell(cell, atIndexPath: indexPath, withObject: object)
         return cell
-    }
-    
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            let object = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-            delegate?.deleteObject?(object)
-        }
-    }
-    
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
     }
     
 }
@@ -110,13 +96,15 @@ extension UITableViewFRCDataSource: NSFetchedResultsControllerDelegate {
         case .Insert:
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Automatic)
         case .Delete:
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Automatic)
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Left)
+            delegate?.didDeleteRowAtIndexPath?(indexPath!)
         case .Update:
             tableView.reloadRowsAtIndexPaths([indexPath!], withRowAnimation: .Automatic)
         case .Move:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Automatic)
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Automatic)
         }
+        delegate?.didChangeObject?(anObject, atIndexPath: indexPath, forChangeType: type, newIndexPath: newIndexPath)
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {

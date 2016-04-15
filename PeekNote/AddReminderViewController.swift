@@ -47,7 +47,7 @@ import CoreLocation
 
 class AddReminderViewController: FormViewController {
     
-    var note: Note!
+    let note: Note
     private var repeats: Repeat!
     private var date: NSDate!
     
@@ -58,7 +58,17 @@ class AddReminderViewController: FormViewController {
         }
     }
     
-    var managedObjectContext: NSManagedObjectContext!
+    let managedObjectContext: NSManagedObjectContext
+    
+    init(managedObjectContext: NSManagedObjectContext, note: Note) {
+        self.managedObjectContext = managedObjectContext
+        self.note = note
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     func done() {
         if let reminder = note.reminder {

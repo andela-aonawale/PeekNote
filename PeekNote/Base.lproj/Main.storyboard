@@ -3,137 +3,11 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
-        <!--Note Preview View Controller-->
-        <scene sceneID="dWz-BV-4dr">
-            <objects>
-                <viewController storyboardIdentifier="NotePreviewViewController" id="fq7-8c-5PC" customClass="NotePreviewViewController" customModule="PeekNote" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="LKb-8M-BH4"/>
-                        <viewControllerLayoutGuide type="bottom" id="J4J-dQ-TaR"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Qsf-B2-Gf1">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zQh-3y-FPo">
-                                <rect key="frame" x="16" y="94" width="288" height="379"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" placeholderIntrinsicWidth="296" placeholderIntrinsicHeight="46" translatesAutoresizingMaskIntoConstraints="NO" id="Glf-RS-yyY" customClass="TagListView" customModule="TagListView">
-                                        <rect key="frame" x="16" y="105.5" width="256" height="46"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="tagBackgroundColor">
-                                                <color key="value" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="3"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                <real key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Ic-PF-82d" customClass="DottedLine" customModule="PeekNote" customModuleProvider="target">
-                                        <rect key="frame" x="8" y="58.5" width="264" height="9.5"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="2Ic-PF-82d" secondAttribute="height" multiplier="136:5" id="fUL-XG-vot"/>
-                                        </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
-                                                <real key="value" value="2"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="lineColor">
-                                                <color key="value" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="16 March 2016 at 12:30 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VL9-lb-hyp">
-                                        <rect key="frame" x="57" y="79.5" width="187.5" height="18"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Title" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4TF-Zu-l2N">
-                                        <rect key="frame" x="16" y="22.5" width="256" height="20"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                        <connections>
-                                            <action selector="textDidChange:" destination="JEX-9P-axG" eventType="editingChanged" id="ODn-eE-vKm"/>
-                                        </connections>
-                                    </textField>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="16 March 2016 at 12:30 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="equ-9w-5XC">
-                                        <rect key="frame" x="16" y="0.0" width="256" height="14.5"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Alarm Clock" translatesAutoresizingMaskIntoConstraints="NO" id="8Nw-B4-S3r">
-                                        <rect key="frame" x="16" y="76" width="25" height="25"/>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lv5-ZT-etB">
-                                        <rect key="frame" x="16" y="50.5" width="256" height="0.0"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="equ-9w-5XC" firstAttribute="top" secondItem="zQh-3y-FPo" secondAttribute="top" id="0dT-ed-jlU"/>
-                                    <constraint firstItem="2Ic-PF-82d" firstAttribute="top" secondItem="Lv5-ZT-etB" secondAttribute="bottom" constant="8" id="45T-q7-bdP"/>
-                                    <constraint firstAttribute="trailing" secondItem="equ-9w-5XC" secondAttribute="trailing" constant="16" id="4V2-fE-2nb"/>
-                                    <constraint firstItem="4TF-Zu-l2N" firstAttribute="leading" secondItem="zQh-3y-FPo" secondAttribute="leading" constant="16" id="5pZ-z8-2qD"/>
-                                    <constraint firstItem="4TF-Zu-l2N" firstAttribute="top" secondItem="zQh-3y-FPo" secondAttribute="top" constant="16" id="9xK-Nm-UCe"/>
-                                    <constraint firstAttribute="trailing" secondItem="4TF-Zu-l2N" secondAttribute="trailing" constant="16" id="A38-Vb-3V6"/>
-                                    <constraint firstAttribute="trailing" secondItem="2Ic-PF-82d" secondAttribute="trailing" constant="16" id="BSd-ii-Eek"/>
-                                    <constraint firstItem="4TF-Zu-l2N" firstAttribute="top" secondItem="equ-9w-5XC" secondAttribute="bottom" constant="8" id="G7T-RQ-Adw"/>
-                                    <constraint firstItem="8Nw-B4-S3r" firstAttribute="leading" secondItem="zQh-3y-FPo" secondAttribute="leading" constant="16" id="Lde-xF-g4J"/>
-                                    <constraint firstItem="8Nw-B4-S3r" firstAttribute="top" secondItem="2Ic-PF-82d" secondAttribute="bottom" constant="8" id="QIx-Xd-Moa"/>
-                                    <constraint firstItem="Lv5-ZT-etB" firstAttribute="leading" secondItem="zQh-3y-FPo" secondAttribute="leading" constant="16" id="QvL-jd-47M"/>
-                                    <constraint firstAttribute="trailing" secondItem="Glf-RS-yyY" secondAttribute="trailing" constant="16" id="THi-rw-j0C"/>
-                                    <constraint firstItem="Lv5-ZT-etB" firstAttribute="top" secondItem="4TF-Zu-l2N" secondAttribute="bottom" constant="8" id="cKn-O1-R3G"/>
-                                    <constraint firstItem="2Ic-PF-82d" firstAttribute="leading" secondItem="zQh-3y-FPo" secondAttribute="leading" constant="8" id="ctZ-fy-Wc1"/>
-                                    <constraint firstItem="Glf-RS-yyY" firstAttribute="top" secondItem="VL9-lb-hyp" secondAttribute="bottom" constant="8" id="dEa-Yw-usF"/>
-                                    <constraint firstItem="equ-9w-5XC" firstAttribute="leading" secondItem="zQh-3y-FPo" secondAttribute="leading" constant="16" id="fh5-hS-Hn3"/>
-                                    <constraint firstItem="VL9-lb-hyp" firstAttribute="centerY" secondItem="8Nw-B4-S3r" secondAttribute="centerY" id="hgd-OU-QVW"/>
-                                    <constraint firstAttribute="trailing" secondItem="Lv5-ZT-etB" secondAttribute="trailing" constant="16" id="q3X-1e-FMs"/>
-                                    <constraint firstItem="VL9-lb-hyp" firstAttribute="leading" secondItem="8Nw-B4-S3r" secondAttribute="trailing" constant="16" id="tFC-5y-4E0"/>
-                                    <constraint firstItem="Glf-RS-yyY" firstAttribute="leading" secondItem="zQh-3y-FPo" secondAttribute="leading" constant="16" id="wW5-vY-lBc"/>
-                                </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="9xK-Nm-UCe"/>
-                                    </mask>
-                                </variation>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="zQh-3y-FPo" firstAttribute="height" secondItem="Qsf-B2-Gf1" secondAttribute="height" multiplier="1:1.5" id="7VC-OV-D2R"/>
-                            <constraint firstItem="zQh-3y-FPo" firstAttribute="leading" secondItem="Qsf-B2-Gf1" secondAttribute="leadingMargin" id="AEO-4v-JJD"/>
-                            <constraint firstItem="zQh-3y-FPo" firstAttribute="centerY" secondItem="Qsf-B2-Gf1" secondAttribute="centerY" id="g8e-cJ-evQ"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="zQh-3y-FPo" secondAttribute="trailing" id="vqe-GS-oAe"/>
-                        </constraints>
-                    </view>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-                    <connections>
-                        <outlet property="bodyTextView" destination="Lv5-ZT-etB" id="ePM-md-3gE"/>
-                        <outlet property="dateLabel" destination="equ-9w-5XC" id="tpb-K8-m99"/>
-                        <outlet property="tagListView" destination="Glf-RS-yyY" id="2Lw-55-tGi"/>
-                        <outlet property="titleTextFiled" destination="4TF-Zu-l2N" id="pKr-jc-oZD"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="FIy-77-n5Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="990" y="-630"/>
-        </scene>
         <!--Notes-->
         <scene sceneID="pY4-Hu-kfo">
             <objects>
@@ -344,11 +218,18 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="mOI-FS-AaM">
-                        <barButtonItem key="rightBarButtonItem" image="Tag" id="N0W-e8-pPC">
-                            <connections>
-                                <action selector="showTags:" destination="JEX-9P-axG" id="8Qk-Rs-gPa"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="action" id="B2B-2y-j2h">
+                                <connections>
+                                    <action selector="shareNote:" destination="JEX-9P-axG" id="eKG-VM-qk3"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="Tag" id="N0W-e8-pPC">
+                                <connections>
+                                    <action selector="showTags:" destination="JEX-9P-axG" id="8Qk-Rs-gPa"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="bodyTextView" destination="qcb-s0-RCd" id="e5M-M7-0XP"/>
@@ -488,8 +369,10 @@
                         </connections>
                     </tableView>
                     <toolbarItems>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="SXw-1b-RBn"/>
-                        <barButtonItem image="Write" id="p9Y-eJ-5i2"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="4Jk-cZ-mv2"/>
+                        <barButtonItem title="0 Notes" id="Sd3-Gi-rgq"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Wj1-V0-ZMx"/>
+                        <barButtonItem style="plain" systemItem="compose" id="p9Y-eJ-5i2"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Notes" id="Zdf-7t-Un8">
                         <barButtonItem key="leftBarButtonItem" image="Menu" id="fne-3F-f06"/>
@@ -520,12 +403,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Alarm Clock" width="25" height="25"/>
         <image name="Cancel" width="25" height="25"/>
         <image name="Menu" width="25" height="25"/>
         <image name="Reminder" width="25" height="25"/>
         <image name="Tag" width="25" height="25"/>
-        <image name="Write" width="23" height="23"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="7bP-dR-LQq"/>

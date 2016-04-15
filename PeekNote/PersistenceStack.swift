@@ -40,7 +40,7 @@ final class PersistenceStack {
         }
     }
     
-    // Prevent initialization from public scope
+    // Prevent initialization from public / internal scope
     private init() {
         registerForiCloudNotifications()
     }

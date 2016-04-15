@@ -12,12 +12,27 @@ import SWRevealViewController
 
 private let reuseIdentifier = "Sidebar Cell"
 
-enum Title: String {
-    case Notes
-    case Reminders
-    case Archive
-    case Trash
-    case Tag
+enum ControllerState {
+    case Notes(String?)
+    case Reminders(String?)
+    case Archive(String?)
+    case Trash(String?)
+    case Tag(String?)
+    
+    func title() -> String {
+        switch self {
+        case .Notes:
+            return "Notes"
+        case .Reminders:
+            return "Reminders"
+        case .Archive:
+            return "Archive"
+        case .Trash:
+            return "Trash"
+        case .Tag:
+            return "Tag"
+        }
+    }
 }
 
 final class SideMenuViewController: UITableViewController {
@@ -30,6 +45,16 @@ final class SideMenuViewController: UITableViewController {
     
     func fetchAllTags() -> [Tag] {
         return managedObjectContext.fetchEntity(Tag.self, matchingPredicate: nil, sortBy: ["name": true]) as? [Tag] ?? []
+    }
+    
+    init(managedObjectContext: NSManagedObjectContext) {
+        self.managedObjectContext = managedObjectContext
+        self.currentIndexPath = NSIndexPath(forRow: 0, inSection: 0)
+        super.init(style: .Plain)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -84,16 +109,16 @@ final class SideMenuViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath)
         if indexPath.section == 0 && indexPath.row == 0 {
-            cell.textLabel?.text = Title.Notes.rawValue
+            cell.textLabel?.text = ControllerState.Notes(nil).title()
             cell.imageView?.image = UIImage(named: "Note")
         } else if indexPath.section == 0 && indexPath.row == 1 {
-            cell.textLabel?.text = Title.Reminders.rawValue
+            cell.textLabel?.text = ControllerState.Reminders(nil).title()
             cell.imageView?.image = UIImage(named: "Alarm Clock")
         } else if indexPath.section == 2 && indexPath.row == 0 {
-            cell.textLabel?.text = Title.Archive.rawValue
+            cell.textLabel?.text = ControllerState.Archive(nil).title()
             cell.imageView?.image = UIImage(named: "Archive")
         } else if indexPath.section == 2 && indexPath.row == 1 {
-            cell.textLabel?.text = Title.Trash.rawValue
+            cell.textLabel?.text = ControllerState.Trash(nil).title()
             cell.imageView?.image = UIImage(named: "Trash")
         } else {
             cell.textLabel?.text = tags[indexPath.row].name
@@ -112,26 +137,26 @@ final class SideMenuViewController: UITableViewController {
         let revealController = revealViewController()
         var predicate: NSPredicate?
         let path = (indexPath.section, indexPath.row)
-        var title: String?
+        var state = ControllerState.Notes(nil)
         
         switch path {
         case let (section, row) where section == currentIndexPath.section && row == currentIndexPath.row:
             revealController.setFrontViewPosition(FrontViewPosition.Left, animated: true)
             return
         case let (section, row) where section == 0 && row == 0:
-            title = Title.Notes.rawValue
+            state = ControllerState.Notes(nil)
             predicate = NSPredicate(format: "state == \(State.Normal.rawValue)")
         case let (section, row) where section == 0 && row == 1:
-            title = Title.Reminders.rawValue
+            state = ControllerState.Reminders(nil)
             predicate = NSPredicate(format: "reminder != nil")
         case let (section, row) where section == 1:
-            title = tags[row].name
+            state = ControllerState.Tag(tags[row].name)
             predicate = NSPredicate(format: "tags contains[c] %@ AND state == \(State.Normal.rawValue)", tags[row])
         case let (section, row) where section == 2 && row == 0:
-            title = Title.Archive.rawValue
+            state = ControllerState.Archive(nil)
             predicate = NSPredicate(format: "state == \(State.Archived.rawValue)")
         case let (section, row) where section == 2 && row == 1:
-            title = Title.Trash.rawValue
+            state = ControllerState.Trash(nil)
             predicate = NSPredicate(format: "state == \(State.Trashed.rawValue)")
         default:
             break
@@ -144,7 +169,13 @@ final class SideMenuViewController: UITableViewController {
         let notesVC = nav.topViewController as! NotesViewController
         notesVC.managedObjectContext = managedObjectContext
         notesVC.fetchPredicate = predicate
-        notesVC.title = title
+        notesVC.controllerState = state
+        switch state {
+        case .Tag(let name):
+            notesVC.title = name
+        default:
+            notesVC.title = state.title()
+        }
         
         revealController.pushFrontViewController(splitViewController, animated: true)
         currentIndexPath = indexPath

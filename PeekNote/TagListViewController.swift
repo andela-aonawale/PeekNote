@@ -13,9 +13,9 @@ private let reuseIdentifier = "Tag Cell"
 
 final class TagListViewController: UITableViewController {
     
-    var note: Note!
+    var note: Note
     let searchBar = UISearchBar()
-    var managedObjectContext: NSManagedObjectContext!
+    var managedObjectContext: NSManagedObjectContext
     private var tableViewDataSource: FilterableFRCDataSource!
     
     let nib = UINib(nibName: "TagCellHeader", bundle: nil)
@@ -58,6 +58,16 @@ final class TagListViewController: UITableViewController {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(addTag))
         headerView.addGestureRecognizer(gesture)
         tableView.contentInset.top = -50
+    }
+    
+    init(managedObjectContext: NSManagedObjectContext, note: Note) {
+        self.managedObjectContext = managedObjectContext
+        self.note = note
+        super.init(style: .Plain)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {

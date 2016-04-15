@@ -16,7 +16,7 @@ let showNetworkActivityIndicator = { visible in
 }
 
 extension UITableView {
-    
+
     func reloadSection(index: Int) {
         reloadSections(NSIndexSet(index: index), withRowAnimation: .Automatic)
     }
@@ -33,7 +33,7 @@ extension NSManagedObjectContext {
         }
     }
     
-    func fetchEntity(entity: NSManagedObject.Type, matchingPredicate predicate: NSPredicate?, sortBy: [String: Bool]?) -> [NSManagedObject]? {
+    func fetchEntity(entity: NSManagedObject.Type, matchingPredicate predicate: NSPredicate?, sortBy: [String: Bool]? = nil) -> [NSManagedObject]? {
         let fetchRequest = NSFetchRequest(entityName: entity.entityName())
         fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = sortBy?.map { NSSortDescriptor(key: $0, ascending: $1)}
@@ -241,6 +241,14 @@ extension UIView {
 }
 
 extension UIViewController {
+    
+    func presentViewController(viewController: UIViewController, barButtonItem: UIBarButtonItem?, completion: (() -> Void)?) {
+        let navCon = UINavigationController(rootViewController: viewController)
+        navCon.modalPresentationStyle = .Popover
+        let ppc = navCon.popoverPresentationController
+        ppc?.barButtonItem = barButtonItem
+        presentViewController(navCon, animated: true, completion: completion)
+    }
     
     var contentViewController: UIViewController {
         if let navcon = self as? UINavigationController {

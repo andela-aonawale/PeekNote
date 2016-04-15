@@ -39,4 +39,14 @@ final class Note: NSManagedObject {
         setPrimitiveValue(NSDate(), forKey: "updatedDate")
     }
     
+    var shareableString: String {
+        if title.isEmpty {
+            return body
+        } else if body.isEmpty {
+            return title
+        } else {
+            return String(format: "%@ \n\n %@", title, body)
+        }
+    }
+    
 }

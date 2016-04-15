@@ -12,18 +12,65 @@ import SWRevealViewController
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
+    
+    // MARK: Types
+    
+    enum ShortcutIdentifier: String {
+        case First
+        
+        // MARK: Initializers
+        
+        init?(fullType: String) {
+            guard let last = fullType.componentsSeparatedByString(".").last else { return nil }
+            
+            self.init(rawValue: last)
+        }
+        
+        // MARK: Properties
+        
+        var type: String {
+            return NSBundle.mainBundle().bundleIdentifier! + ".\(self.rawValue)"
+        }
+    }
+    
+    lazy var notesViewController: NotesViewController = {
+        let revealViewController = UIApplication.sharedApplication().keyWindow?.rootViewController as! SWRevealViewController
+        let splitViewController = revealViewController.frontViewController as! UISplitViewController
+        let nav = splitViewController.viewControllers.first as! UINavigationController
+        return nav.topViewController as! NotesViewController
+    }()
+    
+    @available(iOS 9.0, *)
+    func handleShortCutItem(shortcutItem: UIApplicationShortcutItem) -> Bool {
+        var handled = false
+        
+        // Verify that the provided `shortcutItem`'s `type` is one handled by the application.
+        guard ShortcutIdentifier(fullType: shortcutItem.type) != nil else { return false }
+        
+        guard let shortCutType = shortcutItem.type as String? else { return false }
+        
+        switch shortCutType {
+        case ShortcutIdentifier.First.type:
+            notesViewController.newNote(nil)
+            handled = true
+        default:
+            break
+        }
+        return handled
+    }
 
     var window: UIWindow?
     var persistenceStack: PersistenceStack!
+    
+    /// Saved shortcut item used as a result of an app launch, used later when app is activated.
+    var launchedShortcutItem: AnyObject?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         persistenceStack = PersistenceStack.sharedStack()
         
         // init side menu
-        let rearViewController = SideMenuViewController(style: .Plain)
-        rearViewController.currentIndexPath = NSIndexPath(forRow: 0, inSection: 0)
-        rearViewController.managedObjectContext = persistenceStack.managedObjectContext
+        let rearViewController = SideMenuViewController(managedObjectContext: persistenceStack.managedObjectContext)
         let rearNavController = UINavigationController(rootViewController: rearViewController)
         
         // init splitview & inject managedObjectContext into note view controller
@@ -32,7 +79,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let notesVC = nav.topViewController as! NotesViewController
         notesVC.managedObjectContext = persistenceStack.managedObjectContext
         notesVC.fetchPredicate = NSPredicate(format: "state == \(State.Normal.rawValue)")
+        notesVC.controllerState = ControllerState.Notes(nil)
         splitViewController.delegate = self
+        
         // application wide customization
         UINavigationBar.appearance().barStyle = UIBarStyle.Black
         UINavigationBar.appearance().translucent = false
@@ -41,14 +90,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         UISegmentedControl.appearance().tintColor = .primaryColor()
         
-        if #available(iOS 9.0, *) {
-            UIView.appearanceWhenContainedInInstancesOfClasses([NotesViewController.self]).backgroundColor = .backgroundColor()
-            UIView.appearanceWhenContainedInInstancesOfClasses([NoteDetailViewController.self]).backgroundColor = .backgroundColor()
-        } else {
-            // Fallback on earlier versions
-            UIView.my_appearanceWhenContainedIn(NotesViewController.self).backgroundColor = .backgroundColor()
-            UIView.my_appearanceWhenContainedIn(NoteDetailViewController.self).backgroundColor = .backgroundColor()
-        }
+//        if #available(iOS 9.0, *) {
+//            UIView.appearanceWhenContainedInInstancesOfClasses([NotesViewController.self]).backgroundColor = .backgroundColor()
+//            UIView.appearanceWhenContainedInInstancesOfClasses([NoteDetailViewController.self]).backgroundColor = .backgroundColor()
+//        } else {
+//            // Fallback on earlier versions
+//            UIView.my_appearanceWhenContainedIn(NotesViewController.self).backgroundColor = .backgroundColor()
+//            UIView.my_appearanceWhenContainedIn(NoteDetailViewController.self).backgroundColor = .backgroundColor()
+//        }
         
         window?.tintColor = .secondaryColor()
         
@@ -56,8 +105,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let revealViewController = SWRevealViewController(rearViewController: rearNavController, frontViewController: splitViewController)
         window?.rootViewController = revealViewController
         window?.makeKeyAndVisible()
+        
+        var shouldPerformAdditionalDelegateHandling = true
+        
+        // If a shortcut was launched, display its information and take the appropriate action
+        if #available(iOS 9.0, *), let shortcutItem = launchOptions?[UIApplicationLaunchOptionsShortcutItemKey] as? UIApplicationShortcutItem {
+            
+            launchedShortcutItem = shortcutItem as UIApplicationShortcutItem
+            
+            // This will block "performActionForShortcutItem:completionHandler" from being called.
+            shouldPerformAdditionalDelegateHandling = false
+        }
 
-        return true
+        return shouldPerformAdditionalDelegateHandling
+    }
+    
+    /*
+     Called when the user activates your application by selecting a shortcut on the home screen, except when
+     application(_:,willFinishLaunchingWithOptions:) or application(_:didFinishLaunchingWithOptions) returns `false`.
+     You should handle the shortcut in those callbacks and return `false` if possible. In that case, this
+     callback is used if your application is already launched in the background.
+     */
+    @available(iOS 9.0, *)
+    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+        let handledShortCutItem = handleShortCutItem(shortcutItem)
+        completionHandler(handledShortCutItem)
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -77,6 +149,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        guard #available(iOS 9.0, *), let shortcut = launchedShortcutItem as? UIApplicationShortcutItem else { return }
+        handleShortCutItem(shortcut)
+        launchedShortcutItem = nil
     }
 
     func applicationWillTerminate(application: UIApplication) {
