@@ -83,21 +83,18 @@ final class NotesViewController: UITableViewController {
     func configureToolbar() {
         guard let state = controllerState else { return }
         switch state {
-        case .Archive:
+        case .Archive, .Reminders:
             navigationController?.toolbarHidden = true
         case .Trash:
             navigationController?.toolbarHidden = false
-            setToolbarItems(itemsForState(state, title: ""), animated: false)
-        case .Reminders:
-            navigationController?.toolbarHidden = false
-            setToolbarItems(itemsForState(state, title: "Reminder"), animated: false)
+            setToolbarItems(itemsForState(state), animated: false)
         default:
             navigationController?.toolbarHidden = false
-            setToolbarItems(itemsForState(state, title: "Note"), animated: false)
+            setToolbarItems(itemsForState(state), animated: false)
         }
     }
     
-    func itemsForState(state: ControllerState, title: String) -> [UIBarButtonItem] {
+    func itemsForState(state: ControllerState) -> [UIBarButtonItem] {
         switch state {
         case .Trash:
             let item1 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
@@ -107,7 +104,7 @@ final class NotesViewController: UITableViewController {
             return [item1, item2, item3]
         default:
             let count = fetchedResultsController.fetchedObjects?.count ?? 0
-            let title = count < 1 ? "No \(title)s" : count > 1 ? "\(count) \(title)s" : "\(count) \(title)"
+            let title = count < 1 ? "No Notes" : count > 1 ? "\(count) Notes" : "\(count) Note"
             let item1 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
             let item2 = UIBarButtonItem(title: title, style: .Plain, target: nil, action: nil)
             let item3 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
