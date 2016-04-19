@@ -40,6 +40,7 @@
 		85F084301C9F1599004CE692 /* UITableViewFRCDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F0842F1C9F1599004CE692 /* UITableViewFRCDataSource.swift */; };
 		85F084321C9F1B48004CE692 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F084311C9F1B48004CE692 /* Extension.swift */; };
 		85F084351C9F5D54004CE692 /* NoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F084341C9F5D54004CE692 /* NoteTableViewCell.swift */; };
+		85FD07361CC3E0CF00DFE305 /* PatternView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FD07351CC3E0CF00DFE305 /* PatternView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +105,7 @@
 		85F0842F1C9F1599004CE692 /* UITableViewFRCDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewFRCDataSource.swift; sourceTree = "<group>"; };
 		85F084311C9F1B48004CE692 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		85F084341C9F5D54004CE692 /* NoteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteTableViewCell.swift; sourceTree = "<group>"; };
+		85FD07351CC3E0CF00DFE305 /* PatternView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatternView.swift; sourceTree = "<group>"; };
 		B59871193A656AED416F7439 /* Pods-PeekNote.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeekNote.release.xcconfig"; path = "Pods/Target Support Files/Pods-PeekNote/Pods-PeekNote.release.xcconfig"; sourceTree = "<group>"; };
 		D071E1131B8CC1FA6780B648 /* Pods-PeekNote.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PeekNote.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PeekNote/Pods-PeekNote.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -176,6 +178,7 @@
 				85F084341C9F5D54004CE692 /* NoteTableViewCell.swift */,
 				85754A451CA5A1A20023DFAF /* DottedLine.swift */,
 				85754A961CA74B4A0023DFAF /* TagCellHeader.swift */,
+				85FD07351CC3E0CF00DFE305 /* PatternView.swift */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -525,6 +528,7 @@
 				85F083B71C9EF78E004CE692 /* NotesViewController.swift in Sources */,
 				85F083B51C9EF78E004CE692 /* AppDelegate.swift in Sources */,
 				85754A911CA6C41B0023DFAF /* FilterableFRCDataSource.swift in Sources */,
+				85FD07361CC3E0CF00DFE305 /* PatternView.swift in Sources */,
 				8573383A1CA4AFF6007738E6 /* TagListViewController.swift in Sources */,
 				8589DB8B1CB821010019511F /* APIClient.swift in Sources */,
 				85F0842A1C9F00F4004CE692 /* Model.xcdatamodeld in Sources */,

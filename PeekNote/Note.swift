@@ -39,6 +39,10 @@ final class Note: NSManagedObject {
         setPrimitiveValue(NSDate(), forKey: "updatedDate")
     }
     
+    var isEmpty: Bool {
+        return title.isEmpty && body.isEmpty
+    }
+    
     var shareableString: String {
         if title.isEmpty {
             return body

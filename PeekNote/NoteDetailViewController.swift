@@ -76,11 +76,6 @@ final class NoteDetailViewController: UIViewController {
         return previewActions
     }
     
-    @IBAction func shareNote(sender: UIBarButtonItem) {
-        let activityViewController = UIActivityViewController(activityItems: [note.shareableString], applicationActivities: nil)
-        presentViewController(activityViewController, animated: true, completion: nil)
-    }
-    
     // MARK: Life cycle
 
     override func viewWillDisappear(animated: Bool) {
@@ -91,7 +86,7 @@ final class NoteDetailViewController: UIViewController {
         // make sure we are returning to NotesViewController
         // and not presenting tags view controller
         guard presentedViewController == nil else { return }
-        if note.title.isEmpty && note.body.isEmpty {
+        if note.isEmpty {
             managedObjectContext.deleteObject(note)
         } else if note.hasChanges {
             note.updatedDate = NSDate()
@@ -102,10 +97,36 @@ final class NoteDetailViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         subscribeToKeyboardNotifications()
-        guard note != nil else { return }
+    }
+    
+    func configureTagList() {
         tagListView.removeAllTags()
         note.tags.forEach { tagListView.addTag($0.name) }
-        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        guard note != nil && note.isEmpty else { return }
+        bodyTextView.becomeFirstResponder()
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.userInteractionEnabled = note != nil
+        guard note != nil else { return }
+        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
+        navigationItem.leftItemsSupplementBackButton = true
+        configureTextViews()
+        configureReminder()
+        configureTagList()
+        checkIfNoteIsValid()
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    func configureReminder() {
         guard let reminder = note.reminder else { return }
         if let place = reminder.place {
             reminderLabel.text = place.trigger.title()
@@ -120,38 +141,32 @@ final class NoteDetailViewController: UIViewController {
         deleteReminderButton.enabled = true
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        guard note != nil else { return }
-        if note.title.isEmpty && note.body.isEmpty {
-            bodyTextView.becomeFirstResponder()
-        }
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
-        navigationItem.leftItemsSupplementBackButton = true
-        guard note != nil else { return }
+    func configureTextViews() {
         titleTextFiled.text = note.title
         bodyTextView.text = note.body
         dateLabel.text = note.creationDate.prettified
         tagListView.alignment = .Right
-        checkIfNoteIsValid()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    
+    @IBAction func shareNote(sender: UIBarButtonItem) {
+        let activityViewController = UIActivityViewController(activityItems: [note.shareableString], applicationActivities: nil)
+        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            presentViewController(activityViewController, animated: true, completion: nil)
+        } else {
+            presentViewController(activityViewController, barButtonItem: sender, completion: nil)
+        }
     }
     
     @IBAction func showTags(sender: UIBarButtonItem) {
         let viewController = TagListViewController(managedObjectContext: managedObjectContext, note: note)
-        presentViewController(viewController, barButtonItem: navigationItem.rightBarButtonItem, completion: nil)
+        viewController.delegate = self
+        presentViewController(viewController, barButtonItem: navigationItem.rightBarButtonItem!, completion: nil)
     }
     
     @IBAction func addReminder(sender: UITapGestureRecognizer) {
         let viewController = AddReminderViewController(managedObjectContext: managedObjectContext, note: note)
-        presentViewController(viewController, barButtonItem: nil) {
+        viewController.delegate = self
+        presentViewController(viewController, sourceView: reminderLabel) {
             let settings = UIUserNotificationSettings( forTypes: [.Alert, .Sound, .Badge], categories: nil)
             UIApplication.sharedApplication().registerUserNotificationSettings(settings)
         }
@@ -162,7 +177,7 @@ final class NoteDetailViewController: UIViewController {
         managedObjectContext.deleteObject(reminder)
         reminderLabel.text = "Remind me"
         reminderLabel.font = .systemFontOfSize(17)
-        reminderLabel.textColor = .secondaryColor()
+        reminderLabel.textColor = .primaryColor()
         remindButton.setImage(UIImage(named: "Reminder"), forState: .Normal)
         sender.enabled = false
     }
@@ -173,17 +188,39 @@ final class NoteDetailViewController: UIViewController {
     }
     
     func checkIfNoteIsValid() {
-        let enable = !note.title.isEmpty || !note.body.isEmpty
-        navigationItem.rightBarButtonItems?.first?.enabled = enable
-        navigationItem.rightBarButtonItems?.last?.enabled = enable
-        reminderLabel.userInteractionEnabled = enable
-        reminderLabel.textColor = enable ? .secondaryColor() : .lightGrayColor()
-        remindButton.enabled = enable
+        let isValid = !note.title.isEmpty || !note.body.isEmpty
+        navigationItem.rightBarButtonItems?.first?.enabled = isValid
+        navigationItem.rightBarButtonItems?.last?.enabled = isValid
+        reminderLabel.userInteractionEnabled = isValid
+        reminderLabel.textColor = isValid ? .primaryColor() : .lightGrayColor()
+        remindButton.enabled = isValid
     }
 
 }
 
+extension NoteDetailViewController: TagListViewControllerDelgate {
+    
+    // MARK: - TagListViewControllerDelgate
+    
+    func tagListViewController(controller: TagListViewController, didFinishEditingTags tags: Set<Tag>) {
+        configureTagList()
+    }
+    
+}
+
+extension NoteDetailViewController: AddReminderViewControllerDelegate {
+    
+    // MARK: - AddReminderViewControllerDelegate
+    
+    func addReminderViewController(controller: AddReminderViewController, didFinishPickingReminder reminder: Reminder) {
+        configureReminder()
+    }
+    
+}
+
 extension NoteDetailViewController: UITextViewDelegate {
+    
+    // MARK: - UITextViewDelegate
     
     func textViewDidChange(textView: UITextView) {
         note.body = textView.text

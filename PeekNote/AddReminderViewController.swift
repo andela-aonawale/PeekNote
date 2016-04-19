@@ -26,9 +26,9 @@ import CoreLocation
         switch self {
         case Never: return NSCalendarUnit(rawValue: 0)
         case Daily: return NSCalendarUnit.Day
-        case Weekly: return NSCalendarUnit.Weekday
-        case Monthly: return NSCalendarUnit.WeekOfMonth
-        case Yearly: return NSCalendarUnit.WeekOfYear
+        case Weekly: return NSCalendarUnit.WeekOfYear
+        case Monthly: return NSCalendarUnit.Month
+        case Yearly: return NSCalendarUnit.Year
         }
     }
     init(_ value: String) {
@@ -45,11 +45,16 @@ import CoreLocation
     }
 }
 
+protocol AddReminderViewControllerDelegate: class {
+    func addReminderViewController(controller: AddReminderViewController, didFinishPickingReminder reminder: Reminder)
+}
+
 class AddReminderViewController: FormViewController {
     
     let note: Note
     private var repeats: Repeat!
     private var date: NSDate!
+    weak var delegate: AddReminderViewControllerDelegate?
     
     private var place: Place? {
         didSet {
@@ -76,10 +81,12 @@ class AddReminderViewController: FormViewController {
             reminder.place = place
             reminder.repeats = repeats
             reminder.scheduleNotification()
+            delegate?.addReminderViewController(self, didFinishPickingReminder: reminder)
         } else {
-            let reminder = Reminder(date: date, repeats: repeats, insertIntoManagedObjectContext: managedObjectContext)
-            note.reminder = reminder
+            let reminder = Reminder(date: date, note: note, repeats: repeats, insertIntoManagedObjectContext: managedObjectContext)
             reminder.place = place
+            reminder.scheduleNotification()
+            delegate?.addReminderViewController(self, didFinishPickingReminder: reminder)
         }
         dismiss()
     }
@@ -106,9 +113,9 @@ class AddReminderViewController: FormViewController {
         
         let dateRow = InlineDatePickerRowFormer<FormInlineDatePickerCell>() {
             $0.titleLabel.text = "Date"
-            $0.titleLabel.textColor = .blackColor()
+            $0.titleLabel.textColor = .textColor()
             $0.titleLabel.font = .systemFontOfSize(17)
-            $0.displayLabel.textColor = .lightGrayColor()
+            $0.displayLabel.textColor = .subTextColor()
             $0.displayLabel.font = .systemFontOfSize(17)
         }.inlineCellSetup {
             $0.datePicker.datePickerMode = .DateAndTime
@@ -136,7 +143,7 @@ class AddReminderViewController: FormViewController {
             onSelected: (RowFormer -> Void)?
             ) -> RowFormer in
             return LabelRowFormer<FormLabelCell>() {
-                $0.titleLabel.textColor = .blackColor()
+                $0.titleLabel.textColor = .textColor()
                 $0.titleLabel.font = .systemFontOfSize(17)
                 $0.subTextLabel.textColor = .secondaryColor()
                 $0.subTextLabel.font = .systemFontOfSize(17)
@@ -153,7 +160,7 @@ class AddReminderViewController: FormViewController {
         
         let locationRow = SwitchRowFormer<FormSwitchCell>() {
             $0.titleLabel.text = "Remind me at a location"
-            $0.titleLabel.textColor = .blackColor()
+            $0.titleLabel.textColor = .textColor()
             $0.titleLabel.font = .systemFontOfSize(17)
             $0.switchButton.onTintColor = .primaryColor()
         }.configure { form in
@@ -178,7 +185,7 @@ class AddReminderViewController: FormViewController {
     
     private lazy var subRowFormers: RowFormer = {
         return LabelRowFormer<FormLabelCell>() {
-            $0.titleLabel.textColor = .blackColor()
+            $0.titleLabel.textColor = .textColor()
             $0.titleLabel.font = .systemFontOfSize(17)
             $0.subTextLabel.textColor = .secondaryColor()
             $0.subTextLabel.font = .systemFontOfSize(17)
@@ -256,7 +263,7 @@ class AddReminderViewController: FormViewController {
             let rowFormers = texts.map { text -> LabelRowFormer<FormLabelCell> in
                 return LabelRowFormer<FormLabelCell>() { [weak self] in
                     if let sSelf = self {
-                        $0.titleLabel.textColor = .blackColor()
+                        $0.titleLabel.textColor = .textColor()
                         $0.titleLabel.font = .systemFontOfSize(17)
                         $0.tintColor = .secondaryColor()
                         $0.accessoryType = (text == sSelf.selectedText) ? .Checkmark : .None
@@ -281,7 +288,7 @@ class AddReminderViewController: FormViewController {
 
 extension AddReminderViewController: PlaceSearchViewControllerDelegate {
     
-    func searchViewController(controller: PlaceSearchViewController, didSelectPlace place: Place) {
+    func placeSearchViewController(controller: PlaceSearchViewController, didSelectPlace place: Place) {
         APIClient.sharedInstance.lookUpPlaceWithID(place.id) { [weak self] result, error in
             guard let `self` = self else { return }
             guard let json = result?["result"] as? [String: AnyObject],

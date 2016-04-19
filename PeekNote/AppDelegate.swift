@@ -83,23 +83,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         splitViewController.delegate = self
         
         // application wide customization
-        UINavigationBar.appearance().barStyle = UIBarStyle.Black
+        UINavigationBar.appearance().barStyle = .Black
         UINavigationBar.appearance().translucent = false
         UINavigationBar.appearance().barTintColor = .primaryColor()
         UINavigationBar.appearance().tintColor = .whiteColor()
         
         UISegmentedControl.appearance().tintColor = .primaryColor()
         
-//        if #available(iOS 9.0, *) {
-//            UIView.appearanceWhenContainedInInstancesOfClasses([NotesViewController.self]).backgroundColor = .backgroundColor()
-//            UIView.appearanceWhenContainedInInstancesOfClasses([NoteDetailViewController.self]).backgroundColor = .backgroundColor()
-//        } else {
-//            // Fallback on earlier versions
-//            UIView.my_appearanceWhenContainedIn(NotesViewController.self).backgroundColor = .backgroundColor()
-//            UIView.my_appearanceWhenContainedIn(NoteDetailViewController.self).backgroundColor = .backgroundColor()
-//        }
+        func configureView(view: UIView.Type..., color: UIColor? = nil) {
+            view.forEach {
+                $0.appearance().backgroundColor = color ?? .backgroundColor()
+            }
+        }
         
-        window?.tintColor = .secondaryColor()
+        configureView(UITableView.self, UITableViewCell.self, TagListView.self, UIToolbar.self, UITextView.self)
+        
+        window?.tintColor = .primaryColor()
         
         // set SWRevealViewController as rootviewcontroller
         let revealViewController = SWRevealViewController(rearViewController: rearNavController, frontViewController: splitViewController)
@@ -116,7 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             // This will block "performActionForShortcutItem:completionHandler" from being called.
             shouldPerformAdditionalDelegateHandling = false
         }
-
+        persistenceStack.cleanUpTrash()
         return shouldPerformAdditionalDelegateHandling
     }
     

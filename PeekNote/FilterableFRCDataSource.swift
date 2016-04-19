@@ -51,10 +51,6 @@ final class FilterableFRCDataSource: UITableViewFRCDataSource {
         return cell
     }
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Header"
-    }
-    
 }
 
 extension FilterableFRCDataSource: UISearchBarDelegate {

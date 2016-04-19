@@ -144,19 +144,19 @@ final class SideMenuViewController: UITableViewController {
             revealController.setFrontViewPosition(FrontViewPosition.Left, animated: true)
             return
         case let (section, row) where section == 0 && row == 0:
-            state = ControllerState.Notes(nil)
+            state = .Notes(nil)
             predicate = NSPredicate(format: "state == \(State.Normal.rawValue)")
         case let (section, row) where section == 0 && row == 1:
-            state = ControllerState.Reminders(nil)
-            predicate = NSPredicate(format: "reminder != nil")
+            state = .Reminders(nil)
+            predicate = NSPredicate(format: "reminder != nil AND state == \(State.Normal.rawValue)")
         case let (section, row) where section == 1:
-            state = ControllerState.Tag(tags[row].name)
+            state = .Tag(tags[row].name)
             predicate = NSPredicate(format: "tags contains[c] %@ AND state == \(State.Normal.rawValue)", tags[row])
         case let (section, row) where section == 2 && row == 0:
-            state = ControllerState.Archive(nil)
+            state = .Archive(nil)
             predicate = NSPredicate(format: "state == \(State.Archived.rawValue)")
         case let (section, row) where section == 2 && row == 1:
-            state = ControllerState.Trash(nil)
+            state = .Trash(nil)
             predicate = NSPredicate(format: "state == \(State.Trashed.rawValue)")
         default:
             break

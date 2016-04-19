@@ -11,14 +11,18 @@ import CoreData
 
 private let reuseIdentifier = "Tag Cell"
 
+protocol TagListViewControllerDelgate: class {
+    func tagListViewController(controller: TagListViewController, didFinishEditingTags tags: Set<Tag>)
+}
+
 final class TagListViewController: UITableViewController {
     
     var note: Note
     let searchBar = UISearchBar()
+    var delegate: TagListViewControllerDelgate?
     var managedObjectContext: NSManagedObjectContext
     private var tableViewDataSource: FilterableFRCDataSource!
     
-    let nib = UINib(nibName: "TagCellHeader", bundle: nil)
     var headerView: TagCellHeader!
     
     // Mark: - Fetched Results Controller
@@ -54,6 +58,7 @@ final class TagListViewController: UITableViewController {
     }
     
     func configureTableHeader() {
+        let nib = UINib(nibName: "TagCellHeader", bundle: nil)
         headerView = nib.instantiateWithOwner(nil, options: nil)[0] as! TagCellHeader
         let gesture = UITapGestureRecognizer(target: self, action: #selector(addTag))
         headerView.addGestureRecognizer(gesture)
@@ -85,6 +90,11 @@ final class TagListViewController: UITableViewController {
         tableViewDataSource.delegate = self
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(dismiss))
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.tagListViewController(self, didFinishEditingTags: note.tags)
     }
 
 }

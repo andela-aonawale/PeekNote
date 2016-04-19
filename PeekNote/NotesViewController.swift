@@ -28,7 +28,9 @@ final class NotesViewController: UITableViewController {
         
     // Mark: - Fetched Results Controller
     
-    lazy var fetchedResultsController: NSFetchedResultsController = { [unowned self] in
+    lazy var fetchedResultsController: NSFetchedResultsController = self.myFetchedResultsController()
+    
+    func myFetchedResultsController() -> NSFetchedResultsController {
         let fetchRequest = NSFetchRequest(entityName: Note.entityName())
         fetchRequest.predicate = self.fetchPredicate
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -37,7 +39,7 @@ final class NotesViewController: UITableViewController {
             sectionNameKeyPath: nil,
             cacheName: cacheName)
         return fetchedResultsController
-    }()
+    }
     
     func configureDataSource() {
         tableViewDataSource = UITableViewFRCDataSource(tableView: tableView, reuseIdentifier: "Note Cell", fetchedResultsController: fetchedResultsController)
@@ -54,12 +56,15 @@ final class NotesViewController: UITableViewController {
         guard let revealViewController = revealViewController() else { return }
         menuButton.target = revealViewController
         menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
+        view.addGestureRecognizer(revealViewController.panGestureRecognizer())
     }
     
     func configurePeepPop() {
         guard #available(iOS 9.0, *), traitCollection.forceTouchCapability == .Available else { return }
         registerForPreviewingWithDelegate(self, sourceView: view)
     }
+    
+    // MARK: - Life Cycle
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -86,10 +91,8 @@ final class NotesViewController: UITableViewController {
         case .Archive, .Reminders:
             navigationController?.toolbarHidden = true
         case .Trash:
-            navigationController?.toolbarHidden = false
             setToolbarItems(itemsForState(state), animated: false)
         default:
-            navigationController?.toolbarHidden = false
             setToolbarItems(itemsForState(state), animated: false)
         }
     }
@@ -103,10 +106,14 @@ final class NotesViewController: UITableViewController {
             let item3 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
             return [item1, item2, item3]
         default:
+            let width = view.frame.width / 6
             let count = fetchedResultsController.fetchedObjects?.count ?? 0
             let title = count < 1 ? "No Notes" : count > 1 ? "\(count) Notes" : "\(count) Note"
+            let label = UILabel(frame: CGRect(origin: CGPointZero, size: CGSize(width: width, height: 44)))
+            label.text = title
+            label.adjustsFontSizeToFitWidth = true
             let item1 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
-            let item2 = UIBarButtonItem(title: title, style: .Plain, target: nil, action: nil)
+            let item2 = UIBarButtonItem(customView: label)
             let item3 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
             let item4 = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: #selector(newNote(_:)))
             return [item1, item2, item3, item4]
@@ -119,7 +126,15 @@ final class NotesViewController: UITableViewController {
         Alert.warn(self, title: title, message: message, confirmTitle: "Empty Trash", confirmAction: { [weak self] _ in
             let predicate = NSPredicate(format: "state == \(State.Trashed.rawValue)")
             self?.managedObjectContext.deleteAllEntity(Note.self, matchingPredicate: predicate)
-            self?.managedObjectContext.saveChanges()
+            if #available(iOS 9, *) {
+                // refetch objects from persistent store if the deletions was performed
+                // directly on the NSPersistenceStore by NSBatchDeleteRequest
+                NSFetchedResultsController.deleteCacheWithName(cacheName)
+                self?.tableViewDataSource.performFetch()
+                self?.tableView.reloadSection(0)
+            } else {
+                self?.managedObjectContext.saveChanges()
+            }
             sender.enabled = false
         }, cancelAction: nil)
     }
@@ -155,19 +170,22 @@ final class NotesViewController: UITableViewController {
 
 extension NotesViewController: PreviewControllerDelegate {
     
+    // MARK: - PreviewControllerDelegate
+    
     func tagNote(note: Note) {
         let viewController = TagListViewController(managedObjectContext: managedObjectContext, note: note)
-        presentViewController(viewController, barButtonItem: nil, completion: nil)
+        presentViewControllerFormSheet(viewController, completion: nil)
     }
     
     func shareNote(note: Note) {
+        guard UIDevice.currentDevice().userInterfaceIdiom == .Phone else { return }
         let activityViewController = UIActivityViewController(activityItems: [note.shareableString], applicationActivities: nil)
         presentViewController(activityViewController, animated: true, completion: nil)
     }
     
     func addReminderToNote(note: Note) {
         let viewController = AddReminderViewController(managedObjectContext: managedObjectContext, note: note)
-        presentViewController(viewController, barButtonItem: nil) {
+        presentViewControllerFormSheet(viewController) {
             let settings = UIUserNotificationSettings( forTypes: [.Alert, .Sound, .Badge], categories: nil)
             UIApplication.sharedApplication().registerUserNotificationSettings(settings)
         }
@@ -212,7 +230,6 @@ extension NotesViewController: UIViewControllerPreviewingDelegate {
     func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
         // Reuse the "Peek" view controller for presentation.
         showViewController(viewControllerToCommit, sender: self)
-        navigationController?.setToolbarHidden(true, animated: true)
     }
     
 }
@@ -232,18 +249,8 @@ extension NotesViewController: UISplitViewControllerDelegate {
 }
 
 extension NotesViewController: MGSwipeTableCellDelegate {
-    // Mark: MGSwipeTableCellDelegate
     
-    func setupButton(button: UIButton...) {
-        button.forEach {
-            let spacing: CGFloat = 5.0
-            let imageSize = $0.imageView!.image!.size
-            $0.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: -imageSize.width, bottom: -(imageSize.height + spacing), right: 0.0)
-            let labelString = NSString(string: $0.titleLabel!.text!)
-            let titleSize = labelString.sizeWithAttributes([NSFontAttributeName: $0.titleLabel!.font])
-            $0.imageEdgeInsets = UIEdgeInsets(top: -(titleSize.height + spacing), left: 0.0, bottom: 0.0, right: -titleSize.width)
-        }
-    }
+    // Mark: MGSwipeTableCellDelegate
     
     func swipeTableCell(cell: MGSwipeTableCell!, swipeButtonsForDirection direction: MGSwipeDirection, swipeSettings: MGSwipeSettings!, expansionSettings: MGSwipeExpansionSettings!) -> [AnyObject]! {
         guard let state = controllerState where direction == .RightToLeft else { return nil }
@@ -251,32 +258,23 @@ extension NotesViewController: MGSwipeTableCellDelegate {
         expansionSettings.buttonIndex = 0
         expansionSettings.fillOnTrigger = true
         expansionSettings.threshold = 1
+        
+        func setupButton(button: UIButton...) {
+            button.forEach {
+                let spacing: CGFloat = 5.0
+                let imageSize = $0.imageView!.image!.size
+                $0.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: -imageSize.width, bottom: -(imageSize.height + spacing), right: 0.0)
+                let labelString = NSString(string: $0.titleLabel!.text!)
+                let titleSize = labelString.sizeWithAttributes([NSFontAttributeName: $0.titleLabel!.font])
+                $0.imageEdgeInsets = UIEdgeInsets(top: -(titleSize.height + spacing), left: 0.0, bottom: 0.0, right: -titleSize.width)
+            }
+        }
 
-        let trash = MGSwipeButton(title: "Trash", icon: UIImage(named: "Trash Filled"), backgroundColor: .redColor(), padding: 5) {
-            ($0 as! NoteTableViewCell).note.state = .Trashed
-            return false
-        }
-        let archive = MGSwipeButton(title: "Archive", icon: UIImage(named: "Archive Filled"), backgroundColor: .trashColor(), padding: 5) {
-            ($0 as! NoteTableViewCell).note.state = .Archived
-            return false
-        }
-        let unarchive = MGSwipeButton(title: "Unarchive", icon: UIImage(named: "Delete Archive"), backgroundColor: .trashColor(), padding: 5) {
-            ($0 as! NoteTableViewCell).note.state = .Normal
-            return false
-        }
-        let recover = MGSwipeButton(title: "Recover", icon: UIImage(named: "Recover Trash"), backgroundColor: .trashColor(), padding: 5) {
-            ($0 as! NoteTableViewCell).note.state = .Normal
-            return false
-        }
-        let delete = MGSwipeButton(title: "Delete", icon: UIImage(named: "Delete Filled"), backgroundColor: .redColor(), padding: 5) { [unowned self] cell in
-            let message = "Are you sure you want to delete this note"
-            Alert.warn(self, title: nil, message: message, confirmTitle: "Delete", confirmAction: { _ in
-                self.managedObjectContext.deleteObject((cell as! NoteTableViewCell).note)
-            }, cancelAction: { _ in
-                cell.hideSwipeAnimated(true)
-            })
-            return false
-        }
+        let trash = MGSwipeButton(title: "Trash", icon: UIImage(named: "Trash Filled"), backgroundColor: .deleteColor(), padding: 5)
+        let archive = MGSwipeButton(title: "Archive", icon: UIImage(named: "Archive Filled"), backgroundColor: .trashColor(), padding: 5)
+        let unarchive = MGSwipeButton(title: "Unarchive", icon: UIImage(named: "Delete Archive"), backgroundColor: .trashColor(), padding: 5)
+        let recover = MGSwipeButton(title: "Recover", icon: UIImage(named: "Recover Trash"), backgroundColor: .trashColor(), padding: 5)
+        let delete = MGSwipeButton(title: "Delete", icon: UIImage(named: "Delete Filled"), backgroundColor: .deleteColor(), padding: 5)
         
         setupButton(trash, archive, unarchive, recover, delete)
         
@@ -290,9 +288,40 @@ extension NotesViewController: MGSwipeTableCellDelegate {
         }
     }
     
+    func swipeTableCell(cell: MGSwipeTableCell!, tappedButtonAtIndex index: Int, direction: MGSwipeDirection, fromExpansion: Bool) -> Bool {
+        guard let indexPath = tableView.indexPathForCell(cell),
+        note = fetchedResultsController.objectAtIndexPath(indexPath) as? Note else { return false }
+        switch note.state {
+        case .Normal where index == 1:
+            note.state = .Archived
+        case .Normal where index == 0:
+            note.state = .Trashed
+        case .Archived where index == 1:
+            note.state = .Normal
+        case .Archived where index == 0:
+            note.state = .Trashed
+        case .Trashed where index == 1:
+            note.state = .Normal
+        case .Trashed where index == 0:
+            let message = "Are you sure you want to delete this note"
+            Alert.warn(self, title: nil, message: message, confirmTitle: "Delete", confirmAction: { [weak self] _ in
+                self?.managedObjectContext.deleteObject(note)
+                self?.managedObjectContext.saveChanges()
+            }, cancelAction: { _ in
+                cell.hideSwipeAnimated(true)
+            })
+        default:
+            break
+        }
+        note.updatedDate = NSDate()
+        managedObjectContext.saveChanges()
+        return false
+    }
 }
 
 extension NotesViewController: UITableViewFRCDataSourceDelegate {
+    
+    // MARK: - UITableViewFRCDataSourceDelegate
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath, withObject object: NSManagedObject) {
         guard let cell = cell as? NoteTableViewCell,
@@ -302,8 +331,40 @@ extension NotesViewController: UITableViewFRCDataSourceDelegate {
     }
     
     func didChangeObject(anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        configureToolbar()
+        switch type {
+        case .Delete, .Insert:
+            configureToolbar()
+        default:
+            break
+        }
     }
+    
+    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        switch controllerState {
+        case .Some(.Trash):
+            let view = PatternView(frame: CGRect(origin: CGPoint(x: 8, y: 0), size: CGSize(width: tableView.frame.width, height: 44.0)))
+            let label = UILabel(frame: view.frame)
+            label.numberOfLines = 0
+            label.lineBreakMode = .ByTruncatingHead
+            label.text = "Notes older than 7 days in Trash will be permanently deleted."
+            label.font = .italicSystemFontOfSize(17)
+            label.textColor = .subTextColor()
+            view.addSubview(label)
+            return view
+        default:
+            return nil
+        }
+    }
+    
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        switch controllerState {
+        case .Some(.Trash):
+            return 44.0
+        default:
+            return 0.0
+        }
+    }
+    
 }
 
 extension NotesViewController {

@@ -13,7 +13,7 @@ import CoreData
 private let reuseIdentifier = "Place Cell"
 
 protocol PlaceSearchViewControllerDelegate: class {
-    func searchViewController(controller: PlaceSearchViewController, didSelectPlace place: Place)
+    func placeSearchViewController(controller: PlaceSearchViewController, didSelectPlace place: Place)
 }
 
 class PlaceSearchViewController: UIViewController {
@@ -143,7 +143,7 @@ extension PlaceSearchViewController: UITableViewDelegate {
         let place = predictions[indexPath.row]
         let index = (searchBar.inputAccessoryView as! UISegmentedControl).selectedSegmentIndex
         place.trigger = Trigger(rawValue: Int16(index))!
-        delegate?.searchViewController(self, didSelectPlace: place)
+        delegate?.placeSearchViewController(self, didSelectPlace: place)
         navigationController?.popViewControllerAnimated(true)
     }
     

@@ -121,6 +121,12 @@ final class PersistenceStack {
         return managedObjectContext
     }()
     
+    func cleanUpTrash() {
+        let date = NSDate(timeIntervalSinceNow: -604800.0) // Seven days ago
+        let predicate = NSPredicate(format: "state == \(State.Trashed.rawValue) AND updatedDate < %@", date)
+        managedObjectContext.deleteAllEntity(Note.self, matchingPredicate: predicate)
+    }
+    
     // MARK: - Core Data Saving support
     
     func saveContext () {

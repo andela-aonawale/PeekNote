@@ -21,7 +21,7 @@
     <entity name="Reminder" representedClassName=".Reminder" syncable="YES">
         <attribute name="date" attributeType="Date" syncable="YES"/>
         <attribute name="repeats" attributeType="Integer 16" syncable="YES"/>
-        <relationship name="note" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Note" inverseName="reminder" inverseEntity="Note" syncable="YES"/>
+        <relationship name="note" maxCount="1" deletionRule="Nullify" destinationEntity="Note" inverseName="reminder" inverseEntity="Note" syncable="YES"/>
         <relationship name="place" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Place" inverseName="reminder" inverseEntity="Place" syncable="YES"/>
     </entity>
     <entity name="Tag" representedClassName=".Tag" syncable="YES">
@@ -30,8 +30,8 @@
     </entity>
     <elements>
         <element name="Note" positionX="-63" positionY="-18" width="128" height="150"/>
+        <element name="Place" positionX="-54" positionY="45" width="128" height="150"/>
         <element name="Reminder" positionX="-54" positionY="18" width="128" height="105"/>
         <element name="Tag" positionX="-54" positionY="27" width="128" height="75"/>
-        <element name="Place" positionX="-54" positionY="45" width="128" height="150"/>
     </elements>
 </model>

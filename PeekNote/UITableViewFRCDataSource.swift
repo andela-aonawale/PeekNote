@@ -11,9 +11,8 @@ import CoreData
 import UIKit
 
 @objc protocol UITableViewFRCDataSourceDelegate: class {
+    optional func titleForHeaderInSection(section: Int) -> String?
     optional func didChangeObject(anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?)
-    optional func didDeleteRowAtIndexPath(indexPath: NSIndexPath)
-    optional func viewForHeaderinSection(section: Int) -> UIView?
     optional func didSearchForText(searchText: String, matches: [NSManagedObject])
     optional func didSelectCell(cell: UITableViewCell, withObject object: NSManagedObject)
     optional func didDeselectCell(cell: UITableViewCell, withObject object: NSManagedObject)
@@ -41,7 +40,7 @@ class UITableViewFRCDataSource: NSObject {
         performFetch()
     }
     
-    private func performFetch() {
+    func performFetch() {
         do {
             try fetchedResultsController.performFetch()
         } catch {
@@ -97,7 +96,6 @@ extension UITableViewFRCDataSource: NSFetchedResultsControllerDelegate {
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Automatic)
         case .Delete:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Left)
-            delegate?.didDeleteRowAtIndexPath?(indexPath!)
         case .Update:
             tableView.reloadRowsAtIndexPaths([indexPath!], withRowAnimation: .Automatic)
         case .Move:

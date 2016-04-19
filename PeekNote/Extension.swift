@@ -29,6 +29,7 @@ extension NSManagedObjectContext {
         do {
             try save()
         } catch {
+            print("NSManagedObjectContext save error: \(error)")
             rollback()
         }
     }
@@ -48,8 +49,19 @@ extension NSManagedObjectContext {
         let fetchRequest = NSFetchRequest(entityName: entity.entityName())
         fetchRequest.predicate = predicate
         fetchRequest.includesPropertyValues = false
-        let managedObjects = fetchEntity(entity, matchingPredicate: predicate, sortBy: nil)
-        managedObjects?.forEach { deleteObject($0) }
+        if #available(iOS 9.0, *) {
+            let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            do {
+                try executeRequest(batchDeleteRequest)
+                reset()
+            } catch {
+                print("NSBatchDeleteRequest error: \(error)")
+                rollback()
+            }
+        } else {
+            // Fallback on earlier versions
+            fetchEntity(entity, matchingPredicate: predicate)?.forEach { deleteObject($0) }
+        }
     }
     
 }
@@ -100,7 +112,7 @@ extension UILocalNotification {
             notification.timeZone = .defaultTimeZone()
             notification.repeatInterval = reminder.repeats.calendarUnit()
         }
-        notification.alertBody = reminder.note?.title
+        notification.alertBody = reminder.note.title
         notification.soundName = UILocalNotificationDefaultSoundName
         notification.userInfo = ["objectID": objectID]
         UIApplication.sharedApplication().scheduleLocalNotification(notification)
@@ -178,7 +190,15 @@ extension UIColor {
     }
     
     static func deleteColor() -> UIColor {
-        return UIColor(red:0.90, green: 0.23, blue: 0.05, alpha: 1.00)
+        return .redColor()
+    }
+    
+    static func textColor() -> UIColor {
+        return .blackColor()
+    }
+    
+    static func subTextColor() -> UIColor {
+        return .lightGrayColor()
     }
     
     static func backgroundColor() -> UIColor {
@@ -242,11 +262,25 @@ extension UIView {
 
 extension UIViewController {
     
-    func presentViewController(viewController: UIViewController, barButtonItem: UIBarButtonItem?, completion: (() -> Void)?) {
+    func presentViewControllerFormSheet(viewController: UIViewController, completion: (() -> ())?) {
+        let navCon = UINavigationController(rootViewController: viewController)
+        navCon.modalPresentationStyle = .FormSheet
+        presentViewController(navCon, animated: true, completion: completion)
+    }
+    
+    func presentViewController(viewController: UIViewController, barButtonItem: UIBarButtonItem, completion: (() -> ())?) {
         let navCon = UINavigationController(rootViewController: viewController)
         navCon.modalPresentationStyle = .Popover
         let ppc = navCon.popoverPresentationController
         ppc?.barButtonItem = barButtonItem
+        presentViewController(navCon, animated: true, completion: completion)
+    }
+    
+    func presentViewController(viewController: UIViewController, sourceView: UIView, completion: (() -> ())?) {
+        let navCon = UINavigationController(rootViewController: viewController)
+        navCon.modalPresentationStyle = .Popover
+        let ppc = navCon.popoverPresentationController
+        ppc?.sourceView = sourceView
         presentViewController(navCon, animated: true, completion: completion)
     }
     
