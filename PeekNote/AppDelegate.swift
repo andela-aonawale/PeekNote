@@ -68,6 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         persistenceStack = PersistenceStack.sharedStack()
+        persistenceStack.cleanUpTrash()
         
         // init side menu
         let rearViewController = SideMenuViewController(managedObjectContext: persistenceStack.managedObjectContext)
@@ -75,11 +76,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // init splitview & inject managedObjectContext into note view controller
         let splitViewController = window?.rootViewController as! UISplitViewController
-        let nav = splitViewController.viewControllers.first as! UINavigationController
-        let notesVC = nav.topViewController as! NotesViewController
+        let notesVCNav = splitViewController.viewControllers.first as! UINavigationController
+        let notesVC = notesVCNav.topViewController as! NotesViewController
         notesVC.managedObjectContext = persistenceStack.managedObjectContext
         notesVC.fetchPredicate = NSPredicate(format: "state == \(State.Normal.rawValue)")
         notesVC.controllerState = ControllerState.Notes(nil)
+        
         splitViewController.delegate = self
         
         // application wide customization
@@ -115,7 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             // This will block "performActionForShortcutItem:completionHandler" from being called.
             shouldPerformAdditionalDelegateHandling = false
         }
-        persistenceStack.cleanUpTrash()
+        
         return shouldPerformAdditionalDelegateHandling
     }
     

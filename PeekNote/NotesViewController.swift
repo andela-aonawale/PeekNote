@@ -17,7 +17,16 @@ final class NotesViewController: UITableViewController {
     
     var managedObjectContext: NSManagedObjectContext!
     var tableViewDataSource: UITableViewFRCDataSource!
-    var controllerState: ControllerState?
+    var controllerState: ControllerState? {
+        didSet {
+            switch controllerState {
+            case .Some(.Tag(let name)):
+                title = name
+            default:
+                title = controllerState?.title()
+            }
+        }
+    }
     var fetchPredicate: NSPredicate? {
         didSet {
             NSFetchedResultsController.deleteCacheWithName(cacheName)
@@ -106,14 +115,11 @@ final class NotesViewController: UITableViewController {
             let item3 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
             return [item1, item2, item3]
         default:
-            let width = view.frame.width / 6
             let count = fetchedResultsController.fetchedObjects?.count ?? 0
             let title = count < 1 ? "No Notes" : count > 1 ? "\(count) Notes" : "\(count) Note"
-            let label = UILabel(frame: CGRect(origin: CGPointZero, size: CGSize(width: width, height: 44)))
-            label.text = title
-            label.adjustsFontSizeToFitWidth = true
             let item1 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
-            let item2 = UIBarButtonItem(customView: label)
+            let item2 = UIBarButtonItem(title: title, style: .Plain, target: nil, action: nil)
+            item2.tintColor = .blackColor()
             let item3 = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
             let item4 = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: #selector(newNote(_:)))
             return [item1, item2, item3, item4]
@@ -145,7 +151,13 @@ final class NotesViewController: UITableViewController {
         switch state {
         case .Tag(let name):
             let predicate = NSPredicate(format: "name == %@", name!)
-            let tag = managedObjectContext.fetchEntity(Tag.self, matchingPredicate: predicate)?.first as! Tag
+            guard let tag = managedObjectContext.fetchEntity(Tag.self, matchingPredicate: predicate)?.first as? Tag else {
+                controllerState = ControllerState.Notes(nil)
+                fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "state == \(State.Normal.rawValue)")
+                tableViewDataSource.performFetch()
+                tableView.reloadSection(0)
+                break
+            }
             tag.notes.insert(note)
         default: break
         }
@@ -217,8 +229,8 @@ extension NotesViewController: UIViewControllerPreviewingDelegate {
          Set the height of the preview by setting the preferred content size of the detail view controller.
          Width should be zero, because it's not used in portrait.
          */
-        let minimumSize = detailViewController.view.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
-        detailViewController.preferredContentSize = CGSize(width: 0.0, height: minimumSize.height)
+//        let minimumSize = detailViewController.view.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+//        detailViewController.preferredContentSize = CGSize(width: 0.0, height: minimumSize.height)
         
         // Set the source rect to the cell frame, so surrounding elements are blurred.
         previewingContext.sourceRect = cell.frame

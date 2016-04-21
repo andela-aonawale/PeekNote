@@ -219,12 +219,12 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="mOI-FS-AaM">
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="action" id="B2B-2y-j2h">
+                            <barButtonItem enabled="NO" systemItem="action" id="B2B-2y-j2h">
                                 <connections>
                                     <action selector="shareNote:" destination="JEX-9P-axG" id="eKG-VM-qk3"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="Tag" id="N0W-e8-pPC">
+                            <barButtonItem enabled="NO" image="Tag" id="N0W-e8-pPC">
                                 <connections>
                                     <action selector="showTags:" destination="JEX-9P-axG" id="8Qk-Rs-gPa"/>
                                 </connections>
@@ -269,7 +269,7 @@
         <!--Notes-->
         <scene sceneID="smW-Zh-WAh">
             <objects>
-                <tableViewController storyboardIdentifier="NotesViewController" id="7bK-jq-Zjz" customClass="NotesViewController" customModule="PeekNote" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="NotesViewController" title="Notes" id="7bK-jq-Zjz" customClass="NotesViewController" customModule="PeekNote" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="88" sectionHeaderHeight="22" sectionFooterHeight="22" id="r7i-6Z-zg0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

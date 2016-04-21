@@ -112,10 +112,11 @@ final class NoteDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.userInteractionEnabled = note != nil
-        guard note != nil else { return }
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
         navigationItem.leftItemsSupplementBackButton = true
+        view.userInteractionEnabled = note != nil
+        
+        guard note != nil else { return }
         configureTextViews()
         configureReminder()
         configureTagList()

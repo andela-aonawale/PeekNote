@@ -82,7 +82,6 @@ final class SideMenuViewController: UITableViewController {
         super.viewWillAppear(animated)
         tags = fetchAllTags()
         tableView.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Automatic)
-        editButtonItem().enabled = !tags.isEmpty
     }
 
     override func didReceiveMemoryWarning() {
@@ -170,12 +169,6 @@ final class SideMenuViewController: UITableViewController {
         notesVC.managedObjectContext = managedObjectContext
         notesVC.fetchPredicate = predicate
         notesVC.controllerState = state
-        switch state {
-        case .Tag(let name):
-            notesVC.title = name
-        default:
-            notesVC.title = state.title()
-        }
         
         revealController.pushFrontViewController(splitViewController, animated: true)
         currentIndexPath = indexPath
@@ -190,10 +183,14 @@ final class SideMenuViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        guard editingStyle == .Delete else { return }
         let tag = tags[indexPath.row]
         managedObjectContext.deleteObject(tag)
         tags.removeAtIndex(indexPath.row)
         tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        if currentIndexPath == indexPath {
+            currentIndexPath = NSIndexPath(forRow: -1, inSection: -1)
+        }
     }
 
 }
