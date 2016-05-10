@@ -13,10 +13,13 @@ import SWRevealViewController
 
 private let cacheName = "NotesCache"
 
-final class NotesViewController: UITableViewController {
+final class NotesViewController: UITableViewController, PreviewContext {
+    
+    typealias Cell = UITableViewCell
+    typealias Element = NSManagedObject
+    typealias ListView = UITableView
     
     var managedObjectContext: NSManagedObjectContext!
-    var tableViewDataSource: UITableViewFRCDataSource!
     var controllerState: ControllerState? {
         didSet {
             switch controllerState {
@@ -47,12 +50,9 @@ final class NotesViewController: UITableViewController {
             managedObjectContext: self.managedObjectContext,
             sectionNameKeyPath: nil,
             cacheName: cacheName)
+        fetchedResultsController.delegate = self
+        try! fetchedResultsController.performFetch()
         return fetchedResultsController
-    }
-    
-    func configureDataSource() {
-        tableViewDataSource = UITableViewFRCDataSource(tableView: tableView, reuseIdentifier: "Note Cell", fetchedResultsController: fetchedResultsController)
-        tableViewDataSource.delegate = self
     }
     
     func configureTableView() {
@@ -81,7 +81,6 @@ final class NotesViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureDataSource()
         configureTableView()
         configureSidebar()
         configurePeepPop()
@@ -99,8 +98,6 @@ final class NotesViewController: UITableViewController {
         switch state {
         case .Archive, .Reminders:
             navigationController?.toolbarHidden = true
-        case .Trash:
-            setToolbarItems(itemsForState(state), animated: false)
         default:
             setToolbarItems(itemsForState(state), animated: false)
         }
@@ -136,7 +133,7 @@ final class NotesViewController: UITableViewController {
                 // refetch objects from persistent store if the deletions was performed
                 // directly on the NSPersistenceStore by NSBatchDeleteRequest
                 NSFetchedResultsController.deleteCacheWithName(cacheName)
-                self?.tableViewDataSource.performFetch()
+                self?.performFetch()
                 self?.tableView.reloadSection(0)
             } else {
                 self?.managedObjectContext.saveChanges()
@@ -154,7 +151,7 @@ final class NotesViewController: UITableViewController {
             guard let tag = managedObjectContext.fetchEntity(Tag.self, matchingPredicate: predicate)?.first as? Tag else {
                 controllerState = ControllerState.Notes(nil)
                 fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "state == \(State.Normal.rawValue)")
-                tableViewDataSource.performFetch()
+                performFetch()
                 tableView.reloadSection(0)
                 break
             }
@@ -178,36 +175,6 @@ final class NotesViewController: UITableViewController {
             break
         }
     }
-}
-
-extension NotesViewController: PreviewControllerDelegate {
-    
-    // MARK: - PreviewControllerDelegate
-    
-    func tagNote(note: Note) {
-        let viewController = TagListViewController(managedObjectContext: managedObjectContext, note: note)
-        presentViewControllerFormSheet(viewController, completion: nil)
-    }
-    
-    func shareNote(note: Note) {
-        guard UIDevice.currentDevice().userInterfaceIdiom == .Phone else { return }
-        let activityViewController = UIActivityViewController(activityItems: [note.shareableString], applicationActivities: nil)
-        presentViewController(activityViewController, animated: true, completion: nil)
-    }
-    
-    func addReminderToNote(note: Note) {
-        let viewController = AddReminderViewController(managedObjectContext: managedObjectContext, note: note)
-        presentViewControllerFormSheet(viewController) {
-            let settings = UIUserNotificationSettings( forTypes: [.Alert, .Sound, .Badge], categories: nil)
-            UIApplication.sharedApplication().registerUserNotificationSettings(settings)
-        }
-    }
-    
-    func deleteNote(note: Note) {
-        managedObjectContext.deleteObject(note)
-        managedObjectContext.saveChanges()
-    }
-    
 }
 
 @available(iOS 9.0, *)
@@ -331,24 +298,57 @@ extension NotesViewController: MGSwipeTableCellDelegate {
     }
 }
 
-extension NotesViewController: UITableViewFRCDataSourceDelegate {
+extension NotesViewController: FetchedTableList {
     
-    // MARK: - UITableViewFRCDataSourceDelegate
-
-    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath, withObject object: NSManagedObject) {
+    // MARK: Fetched Controller
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        tableWillChangeContent()
+    }
+    
+    func controller(controller: NSFetchedResultsController,
+                          didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int,
+                                           forChangeType type: NSFetchedResultsChangeType) {
+        tableDidChangeSection(sectionIndex, withChangeType: type)
+    }
+    
+    func controller(controller: NSFetchedResultsController,
+                          didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?,
+                                          forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        tableDidChangeObjectAtIndexPath(indexPath, withChangeType: type, newIndexPath: newIndexPath)
+        if type == .Delete || type == .Insert {
+            configureToolbar()
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        tableDidChangeContent()
+    }
+    
+    func listView(listView: ListView, configureCell cell: Cell, withElement element: Element, atIndexPath indexPath: NSIndexPath) {
         guard let cell = cell as? NoteTableViewCell,
-        note = object as? Note else { return }
+            note = element as? Note else { return }
         cell.note = note
         cell.delegate = self
     }
     
-    func didChangeObject(anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        switch type {
-        case .Delete, .Insert:
-            configureToolbar()
-        default:
-            break
-        }
+    // MARK: Table View
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return numberOfRowsInSection(section)
+    }
+    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return numberOfSections
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableCellAtIndexPath(indexPath) as! NoteTableViewCell
+        return cell
+    }
+    
+    func cellIdentifierForIndexPath(indexPath: NSIndexPath) -> String {
+        return "Note Cell"
     }
     
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

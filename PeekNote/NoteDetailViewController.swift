@@ -10,13 +10,6 @@ import UIKit
 import CoreData
 import TagListView
 
-protocol PreviewControllerDelegate: class {
-    func tagNote(note: Note)
-    func shareNote(note: Note)
-    func addReminderToNote(note: Note)
-    func deleteNote(note: Note)
-}
-
 final class NoteDetailViewController: UIViewController {
 
     var note: Note!
@@ -29,7 +22,7 @@ final class NoteDetailViewController: UIViewController {
         case Delete
     }
     
-    weak var delegate: PreviewControllerDelegate?
+    weak var delegate: PreviewContext?
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var dateLabel: UILabel!

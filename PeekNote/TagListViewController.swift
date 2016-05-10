@@ -9,6 +9,13 @@
 import UIKit
 import CoreData
 
+class AwesomeCell: UITableViewCell {
+    override func setSelected(selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        accessoryType = selected ? .Checkmark : .None
+    }
+}
+
 private let reuseIdentifier = "Tag Cell"
 
 protocol TagListViewControllerDelgate: class {
